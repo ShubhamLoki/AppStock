@@ -1,18 +1,30 @@
+import { StockDivergenceService } from 'src/app/services/stock.divergence.service';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-hourly-divergence',
   templateUrl: './divergence.component.html',
-  styleUrls: ['./divergence.component.scss']
+  styleUrls: ['./divergence.component.scss'],
 })
 export class DivergenceComponent implements OnInit {
   title = 'DemoApp';
   listArr;
   stockName = '';
-  constructor(private apiService: ApiService) { }
+  constructor(
+    private apiService: ApiService,
+    private stockDivergenceService: StockDivergenceService
+  ) {}
 
   ngOnInit(): void {
+    this.stockDivergenceService
+      .calculateDivergence(this.apiService.stock)
+      .then((quoteArray) => {
+        this.listArr = quoteArray;
+      });
+  }
+
+  localDivergence() {
     this.apiService.getData().subscribe((data: any) => {
       this.stockName = this.apiService.stock;
       this.listArr = [];
@@ -27,7 +39,7 @@ export class DivergenceComponent implements OnInit {
         let avgDownMove = 0;
 
         if (i != 0) {
-          let move = listData.close[i] - listData.close[i - 1]
+          let move = listData.close[i] - listData.close[i - 1];
           move = Math.round(move * 10000) / 10000;
           if (move > 0) {
             upMove = move;
@@ -43,14 +55,14 @@ export class DivergenceComponent implements OnInit {
           close: Math.round(listData.close[i] * 100) / 100,
           volume: Math.round(listData.volume[i] * 100) / 100,
           upMove: upMove,
-          downMove: downMove
+          downMove: downMove,
         });
         if (this.listArr.length >= 14) {
           avgUpMove = 0;
           avgDownMove = 0;
           for (let avg = i - 13; avg < i; avg++) {
-            avgUpMove += this.listArr[avg].upMove
-            avgDownMove += this.listArr[avg].downMove
+            avgUpMove += this.listArr[avg].upMove;
+            avgDownMove += this.listArr[avg].downMove;
           }
           avgUpMove = avgUpMove / 14;
           avgDownMove = avgDownMove / 14;
@@ -58,7 +70,7 @@ export class DivergenceComponent implements OnInit {
         const rs = avgUpMove / avgDownMove;
         let rsi = 0;
         if (avgDownMove > 0 || avgDownMove < 100) {
-          rsi = 100 - (100 / (1 + rs));
+          rsi = 100 - 100 / (1 + rs);
         } else if (avgDownMove >= 100) {
           rsi = 100;
         }
@@ -66,7 +78,11 @@ export class DivergenceComponent implements OnInit {
         let minRSI = 0;
         let timeComp;
         if (this.listArr.length > 20) {
-          for (let div = this.listArr.length - 20; div < this.listArr.length - 1; div++) {
+          for (
+            let div = this.listArr.length - 20;
+            div < this.listArr.length - 1;
+            div++
+          ) {
             if (minLow == 0) {
               minLow = this.listArr[div].low;
             }
@@ -76,12 +92,19 @@ export class DivergenceComponent implements OnInit {
               minRSI = this.listArr[div].rsi;
               timeComp = this.listArr[div].time;
             }
-
           }
         }
 
-        if (minLow >= this.listArr[this.listArr.length - 1].low && minRSI <= rsi) {
-          console.log(minLow, this.listArr[this.listArr.length - 1].low, minRSI, rsi);
+        if (
+          minLow >= this.listArr[this.listArr.length - 1].low &&
+          minRSI <= rsi
+        ) {
+          console.log(
+            minLow,
+            this.listArr[this.listArr.length - 1].low,
+            minRSI,
+            rsi
+          );
           diver = true;
         } else {
           timeComp = null;
@@ -95,15 +118,13 @@ export class DivergenceComponent implements OnInit {
           rsi: Math.round(rsi * 100) / 100,
           diver: diver,
           timeComp: timeComp,
-          minLow: minLow
+          minLow: minLow,
         };
       }
       console.log(this.listArr);
       this.listArr.sort(function (x, y) {
         return y.time - x.time;
-      })
-
+      });
     });
   }
-
 }

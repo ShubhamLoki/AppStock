@@ -15,15 +15,18 @@
         <!-- <td>Avg Down move</td> -->
         <!-- <td>RS</td> -->
         <td>RSI</td>
-        <td>Diver</td>
-        <td>Divergence Time</td>
-        <td>Last Min Low</td>
+        <td>Last Time</td>
+        <td>Last Low</td>
+        <td>Last RSI</td>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let stock of listArr; let i = index" [ngClass]="stock.diver ? 'bg-info' : ''">
+      <tr
+        *ngFor="let stock of listArr; let i = index"
+        [ngClass]="stock.lowerStockData ? 'bg-info' : ''"
+      >
         <!-- <td>{{ stock.time }}</td> -->
-        <td>{{ stock.time * 1000| date:'short' }}</td>
+        <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
         <!-- <td>{{ stock.open }}</td>
             <td>{{ stock.high }}</td>
             <td>{{ stock.volume }}</td> -->
@@ -34,10 +37,25 @@
         <!-- <td> {{ stock.avgUpMove }} </td> -->
         <!-- <td> {{ stock.avgDownMove }} </td> -->
         <!-- <td> {{ stock.rs }} </td> -->
-        <td> {{ stock.rsi }} </td>
-        <td> {{ stock.diver }} </td>
+        <td>{{ stock.rsi }}</td>
+        <!-- <td> {{ stock.diver }} </td>
         <td> <span *ngIf="stock.timeComp">{{ stock.timeComp * 1000 | date:'short' }}</span> </td>
-        <td> {{ stock.minLow }} </td>
+        <td> {{ stock.minLow }} </td> -->
+        <td>
+          <span *ngIf="stock.lowerStockData">{{
+            stock.lowerStockData.timeStamp * 1000 | date: "short"
+          }}</span>
+        </td>
+        <td>
+          <span *ngIf="stock.lowerStockData">{{
+            stock.lowerStockData.low
+          }}</span>
+        </td>
+        <td>
+          <span *ngIf="stock.lowerStockData">{{
+            stock.lowerStockData.rsi
+          }}</span>
+        </td>
       </tr>
     </tbody>
   </table>
