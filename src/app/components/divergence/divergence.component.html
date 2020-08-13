@@ -1,19 +1,9 @@
 <div>
-  <table class="table">
+  <table class="table table-striped">
     <thead>
       <tr>
-        <!-- <td>Time</td> -->
         <td>Time IST</td>
-        <!-- <td>Open</td>
-            <td>High</td>
-            <td>Volume</td> -->
         <td>Low</td>
-        <td>Close</td>
-        <!-- <td>Up move</td> -->
-        <!-- <td>Down move</td> -->
-        <!-- <td>Avg Up move</td> -->
-        <!-- <td>Avg Down move</td> -->
-        <!-- <td>RS</td> -->
         <td>RSI</td>
         <td>Last Time</td>
         <td>Last Low</td>
@@ -21,41 +11,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="let stock of listArr; let i = index"
-        [ngClass]="stock.lowerStockData ? 'bg-info' : ''"
-      >
-        <!-- <td>{{ stock.time }}</td> -->
+      <tr *ngFor="let stock of listArr; let i = index">
         <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
-        <!-- <td>{{ stock.open }}</td>
-            <td>{{ stock.high }}</td>
-            <td>{{ stock.volume }}</td> -->
         <td>{{ stock.low }}</td>
-        <td>{{ stock.close }}</td>
-        <!-- <td> {{ stock.upMove }} </td> -->
-        <!-- <td> {{ stock.downMove }} </td> -->
-        <!-- <td> {{ stock.avgUpMove }} </td> -->
-        <!-- <td> {{ stock.avgDownMove }} </td> -->
-        <!-- <td> {{ stock.rs }} </td> -->
         <td>{{ stock.rsi }}</td>
-        <!-- <td> {{ stock.diver }} </td>
-        <td> <span *ngIf="stock.timeComp">{{ stock.timeComp * 1000 | date:'short' }}</span> </td>
-        <td> {{ stock.minLow }} </td> -->
-        <td>
-          <span *ngIf="stock.lowerStockData">{{
-            stock.lowerStockData.timeStamp * 1000 | date: "short"
-          }}</span>
-        </td>
-        <td>
-          <span *ngIf="stock.lowerStockData">{{
-            stock.lowerStockData.low
-          }}</span>
-        </td>
-        <td>
-          <span *ngIf="stock.lowerStockData">{{
-            stock.lowerStockData.rsi
-          }}</span>
-        </td>
+        <td>{{ stock.lowerStockData.timeStamp * 1000 | date: "short" }}</td>
+        <td>{{ stock.lowerStockData.low }}</td>
+        <td>{{ stock.lowerStockData.rsi }}</td>
       </tr>
     </tbody>
   </table>

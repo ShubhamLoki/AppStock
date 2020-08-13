@@ -9,7 +9,7 @@ export class StockDivergenceService {
   stockArray = STOCK_LIST;
   rsiInterval = 14;
   divergenceInterval = 20;
-  lastCheckInterval = 20;
+  lastCheckInterval = 15;
   divergenceMap = new Map<string, any>();
 
   constructor(private apiService: ApiService) {}
@@ -160,6 +160,36 @@ export class StockDivergenceService {
         resolve(quoteArray);
       });
       // });
+      // ! END apiService.getStockData
+    });
+
+    return resultPromise;
+  }
+
+  calculateAllDivergenceTest() {
+    const resultPromise = new Promise((resolve, reject) => {
+      this.stockArray.forEach((stockName, nameIntex) => {
+        this.calculateDivergence(stockName).then((quoteArray) => {
+          if (quoteArray.length > this.lastCheckInterval) {
+            for (
+              let checkIndex = quoteArray.length - this.lastCheckInterval;
+              checkIndex < quoteArray.length - 1;
+              checkIndex++
+            ) {
+              const crrStockData: StockData = quoteArray[checkIndex];
+              console.log(crrStockData.lowerStockData);
+              if (crrStockData.lowerStockData) {
+                this.divergenceMap.set(stockName, crrStockData);
+              }
+            }
+          }
+          if (nameIntex == this.stockArray.length - 1) {
+            resolve(this.divergenceMap);
+          }
+          // ! END calculateDivergence
+        });
+        // ! END stockArray.forEach
+      });
       // ! END apiService.getStockData
     });
 

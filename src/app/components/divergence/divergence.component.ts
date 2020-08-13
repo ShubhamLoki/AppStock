@@ -1,4 +1,7 @@
-import { StockDivergenceService } from 'src/app/services/stock.divergence.service';
+import {
+  StockDivergenceService,
+  StockData,
+} from 'src/app/services/stock.divergence.service';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -9,7 +12,7 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class DivergenceComponent implements OnInit {
   title = 'DemoApp';
-  listArr;
+  listArr = [];
   stockName = '';
   constructor(
     private apiService: ApiService,
@@ -20,7 +23,11 @@ export class DivergenceComponent implements OnInit {
     this.stockDivergenceService
       .calculateDivergence(this.apiService.stock)
       .then((quoteArray) => {
-        this.listArr = quoteArray;
+        quoteArray.forEach((stock: StockData) => {
+          if (stock.lowerStockData) {
+            this.listArr.push(stock);
+          }
+        });
       });
   }
 
