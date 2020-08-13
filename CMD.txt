@@ -1,0 +1,5 @@
+cd ./Documents
+cd ./DemoApp
+ng serve
+
+localhost:4200
