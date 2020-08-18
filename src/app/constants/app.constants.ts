@@ -175,5 +175,5 @@ export const STOCK_LIST = [
 ];
 
 export const PATHS = {
-  HOURLY: 'hourly_divergence'
-}
+  HOURLY: 'hourly_divergence',
+};

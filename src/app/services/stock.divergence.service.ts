@@ -9,7 +9,7 @@ export class StockDivergenceService {
   stockArray = STOCK_LIST;
   rsiInterval = 14;
   divergenceInterval = 20;
-  lastCheckInterval = 15;
+  lastCheckInterval = 20;
   divergenceMap = new Map<string, any>();
 
   constructor(private apiService: ApiService) {}
@@ -169,25 +169,29 @@ export class StockDivergenceService {
   calculateAllDivergenceTest() {
     const resultPromise = new Promise((resolve, reject) => {
       this.stockArray.forEach((stockName, nameIntex) => {
-        this.calculateDivergence(stockName).then((quoteArray) => {
-          if (quoteArray.length > this.lastCheckInterval) {
-            for (
-              let checkIndex = quoteArray.length - this.lastCheckInterval;
-              checkIndex < quoteArray.length - 1;
-              checkIndex++
-            ) {
-              const crrStockData: StockData = quoteArray[checkIndex];
-              console.log(crrStockData.lowerStockData);
-              if (crrStockData.lowerStockData) {
-                this.divergenceMap.set(stockName, crrStockData);
+        this.calculateDivergence(stockName)
+          .then((quoteArray) => {
+            if (quoteArray.length > this.lastCheckInterval) {
+              for (
+                let checkIndex = quoteArray.length - this.lastCheckInterval;
+                checkIndex < quoteArray.length - 1;
+                checkIndex++
+              ) {
+                const crrStockData: StockData = quoteArray[checkIndex];
+                // console.log(crrStockData.lowerStockData);
+                if (crrStockData.lowerStockData) {
+                  this.divergenceMap.set(stockName, crrStockData);
+                }
               }
             }
-          }
-          if (nameIntex == this.stockArray.length - 1) {
-            resolve(this.divergenceMap);
-          }
-          // ! END calculateDivergence
-        });
+            if (nameIntex == this.stockArray.length - 1) {
+              resolve(this.divergenceMap);
+            }
+            // ! END calculateDivergence
+          })
+          .catch((error) => {
+            console.error(error);
+          });
         // ! END stockArray.forEach
       });
       // ! END apiService.getStockData
@@ -199,8 +203,11 @@ export class StockDivergenceService {
   calculateDivergence(stockName): Promise<any> {
     const returnPromise = new Promise((resolve, reject) => {
       this.apiService.getStockData(stockName).subscribe((data: any) => {
+        if (!data) {
+          reject();
+        }
         const quoteArray = [];
-        console.log('************ ', stockName);
+        // console.log('************ ', stockName);
         const result = data.chart.result[0];
         const listData: any = result.indicators.quote[0];
         const timeStampArr: any = result.timestamp;
@@ -272,7 +279,7 @@ export class StockDivergenceService {
           const currStockData: StockData = stockData;
           // * Calculate Divergence
           if (quoteArray.length > 15 && currStockData.rsi <= 40) {
-            console.log(quoteArray.length, currStockData.rsi);
+            // console.log(quoteArray.length, currStockData.rsi);
             for (
               let idea = quoteArray.length - 3;
               idea >= quoteArray.length - 15;
@@ -284,7 +291,7 @@ export class StockDivergenceService {
                 currStockData.low < quoteArray[idea].low &&
                 currStockData.rsi > quoteArray[idea].rsi
               ) {
-                console.log(quoteArray[idea]);
+                // console.log(quoteArray[idea]);
                 for (
                   let fromIdea = idea + 1;
                   fromIdea < quoteArray.length - 1;
@@ -296,15 +303,15 @@ export class StockDivergenceService {
                       quoteArray[idea].close -
                     100;
                   if (upside >= 2) {
-                    console.error('Error : ', upside);
-                    console.error(quoteArray[fromIdea]);
+                    // console.error('Error : ', upside);
+                    // console.error(quoteArray[fromIdea]);
                     if (
                       lowerStockData == null ||
                       lowerStockData.low > quoteArray[idea].low
                     ) {
                       lowerStockData = quoteArray[idea];
-                      console.error('***');
-                      console.error(quoteArray[idea]);
+                      // console.error('***');
+                      // console.error(quoteArray[idea]);
                     }
                   }
                 }

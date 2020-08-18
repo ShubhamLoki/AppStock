@@ -3,36 +3,24 @@
   <table class="table table-striped">
     <thead class="thead-dark">
       <tr>
-        <td>Last Divergence</td>
-        <td>Low</td>
-        <td>Close</td>
-        <td>RSI</td>
-        <td>COMP TIME</td>
-        <td>COMP Low</td>
-        <td>COMP RSI</td>
+        <td>Stock Name</td>
+        <td>TIME</td>
+        <td>LAST TIME</td>
+        <td>Divergence Info</td>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let stock of dataArray">
-        <!-- <tr *ngFor="let stock of localMap | keyvalue"> -->
-        <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
-        <td>{{ stock.low }}</td>
-        <td>{{ stock.close }}</td>
-        <td>{{ stock.rsi }}</td>
+      <!-- <tr *ngFor="let stock of dataArray"> -->
+      <tr *ngFor="let stock of localMap | keyvalue">
+        <td>{{ stock.key }}</td>
+        <td>{{ stock.value.timeStamp * 1000 | date: "short" }}</td>
         <td>
-          <span *ngIf="stock.lowerStockData">{{
-            stock.lowerStockData.timeStamp * 1000 | date: "short"
-          }}</span>
+          {{ stock.value.lowerStockData.timeStamp * 1000 | date: "short" }}
         </td>
         <td>
-          <span *ngIf="stock.lowerStockData">{{
-            stock.lowerStockData.low
-          }}</span>
-        </td>
-        <td>
-          <span *ngIf="stock.lowerStockData">{{
-            stock.lowerStockData.rsi
-          }}</span>
+          <button class="btn btn-info" (click)="openDivergence(stock.key)">
+            Info
+          </button>
         </td>
       </tr>
     </tbody>

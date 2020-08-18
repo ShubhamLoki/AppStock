@@ -1,0 +1,24 @@
+<div>
+  <table class="table">
+    <thead>
+      <tr>
+        <td>Time IST</td>
+        <td>Open</td>
+        <td>High</td>
+        <td>Low</td>
+        <td>Close</td>
+        <td>RSI</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of stockList; let i = index">
+        <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
+        <td>{{ stock.open }}</td>
+        <td>{{ stock.high }}</td>
+        <td>{{ stock.low }}</td>
+        <td>{{ stock.close }}</td>
+        <td>{{ stock.rsi }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
