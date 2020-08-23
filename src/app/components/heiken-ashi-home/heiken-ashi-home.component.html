@@ -1,24 +1,75 @@
-<div>
-  <table class="table">
-    <thead>
-      <tr>
-        <td>Time IST</td>
-        <td>Open</td>
-        <td>High</td>
-        <td>Low</td>
-        <td>Close</td>
-        <td>RSI</td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let stock of stockList; let i = index">
-        <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
-        <td>{{ stock.open }}</td>
-        <td>{{ stock.high }}</td>
-        <td>{{ stock.low }}</td>
-        <td>{{ stock.close }}</td>
-        <td>{{ stock.rsi }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="heikin-ashi-home">
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-row justify-content-between">
+      <h3 class="ml-3">Heikin Ashi Home</h3>
+    </div>
+    <div class="d-flex flex-row">
+      <div class="d-flex flex-column col-3">
+        <button
+          class="btn btn-light"
+          [ngClass]="{ active: showTodayAbove55StockList }"
+          (click)="openGoingAbove55()"
+        >
+          Today Above 55
+        </button>
+        <button
+          class="btn btn-light"
+          [ngClass]="{ active: showAllStockList }"
+          (click)="openAll()"
+        >
+          All Stocks
+        </button>
+        <button
+          class="btn btn-light"
+          [ngClass]="{ active: showNear55StockList }"
+          (click)="openNear55()"
+        >
+          Near 55
+        </button>
+      </div>
+      <div class="col-9">
+        <div class="d-flex flex-column" *ngIf="showAllStockList">
+          <div class="d-flex flex-row bg-light-gray">
+            <h4>List Of All Stocks with current RSI</h4>
+          </div>
+          <table class="table">
+            <thead class="bg-light">
+              <tr>
+                <td>Stock Name</td>
+                <td>Time IST</td>
+                <!-- <td>Open</td>
+                <td>High</td>
+                <td>Low</td>
+                <td>Close</td> -->
+                <td>RSI</td>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <tr *ngFor="let stock of stockList; let i = index">
+                <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
+                <td>{{ stock.open }}</td>
+                <td>{{ stock.high }}</td>
+                <td>{{ stock.low }}</td>
+                <td>{{ stock.close }}</td>
+                <td>{{ stock.rsi }}</td>
+              </tr> -->
+
+              <tr
+                *ngFor="
+                  let stock of heikenAshiService.stockLatestDataArray;
+                  let i = index
+                "
+              >
+                <td>{{ stock.stockName }}</td>
+                <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
+                <td [ngClass]="{ 'bg-success': stock.rsi >= 55 }">
+                  {{ stock.rsi }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

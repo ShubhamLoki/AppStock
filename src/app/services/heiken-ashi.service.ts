@@ -1,6 +1,8 @@
+import { STOCK_LIST_HEIKIN } from './../constants/stock-list.constants';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 import { StockData } from './stock.divergence.service';
+import { times } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +10,10 @@ import { StockData } from './stock.divergence.service';
 export class HeikenAshiService {
   rsiInterval = 14;
   upsideList = [];
+  stockArray = STOCK_LIST_HEIKIN;
+  stockLatestDataArray = [];
 
+  stockQuoteArrayMap = new Map<string, any[]>();
   constructor(private apiService: ApiService) {}
 
   calculateHeikenAshi(stockName): Promise<any> {
@@ -16,7 +21,7 @@ export class HeikenAshiService {
       this.apiService.timeInterval = '1d';
 
       this.apiService.getStockData(stockName).subscribe((data: any) => {
-        console.log(data);
+        // console.log(stockName);
 
         if (!data) {
           reject();
@@ -27,7 +32,10 @@ export class HeikenAshiService {
         const result = data.chart.result[0];
         const listData: any = result.indicators.quote[0];
         const timeStampArr: any = result.timestamp;
-
+        if (!timeStampArr) {
+          reject(stockName);
+          return;
+        }
         // * calculate open = (open of previous bar + close of previous bar) / 2
         // * calculate close = (open + high + low + close) / 4
         // * calculate high = the maximum value from the high, open, or close of the current period
@@ -49,6 +57,7 @@ export class HeikenAshiService {
           stockData.close = Math.round(listData.close[timeIndex] * 100) / 100;
           stockData.volume = Math.round(listData.volume[timeIndex] * 100) / 100;
 
+          stockDataHA.stockName = stockName;
           stockDataHA.timeStamp = timeStamp;
           stockDataHA.volume =
             Math.round(listData.volume[timeIndex] * 100) / 100;
@@ -130,6 +139,7 @@ export class HeikenAshiService {
           }
           // ! END timeStampArr.forEach
         });
+        this.stockQuoteArrayMap.set(stockName, quoteArray);
         resolve(quoteArray);
       });
     });
@@ -189,5 +199,56 @@ export class HeikenAshiService {
     });
 
     return retPromise;
+  }
+
+  fetchStockParallel() {
+    return new Promise((resolve, reject) => {
+      const fetched: any[] = [];
+      let index = 0;
+
+      const fetchPromise = (stockName) => this.calculateHeikenAshi(stockName);
+
+      const fetchStockFn = () => {
+        // console.log(index.toString());
+        if (index === this.stockArray.length) {
+          return;
+        }
+
+        const stockName = this.stockArray[index++];
+
+        fetchPromise(stockName).then((quoteArray) => {
+          fetched.push(quoteArray);
+
+          if (fetched.length === this.stockArray.length) {
+            console.log('****************************');
+            resolve(fetched);
+          } else {
+            fetchStockFn();
+          }
+        });
+      };
+
+      times(50, fetchStockFn);
+    });
+  }
+
+  getCurrentRSIOfAll(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.fetchStockParallel()
+        .then((allFetched: []) => {
+          console.log(allFetched);
+          const stockRSIArray = [];
+          allFetched.forEach((qouteArray: []) => {
+            const lastData: StockData = qouteArray[qouteArray.length - 1];
+            stockRSIArray.push(lastData);
+          });
+          this.stockLatestDataArray = stockRSIArray;
+          resolve(stockRSIArray);
+        })
+        .catch((error) => {
+          console.log(error);
+          reject(error);
+        });
+    });
   }
 }

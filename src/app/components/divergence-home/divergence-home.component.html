@@ -1,0 +1,86 @@
+<div class="heikin-ashi-home">
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-row justify-content-between">
+      <h3 class="ml-3">Divergence Home</h3>
+    </div>
+    <div class="d-flex flex-row">
+      <div class="d-flex flex-column col-3">
+        <button
+          class="btn btn-light"
+          [ngClass]="{ active: showHourlyDivergence }"
+          (click)="openHourDiver()"
+        >
+          Divergence On Hour
+        </button>
+        <button
+          class="btn btn-light"
+          [ngClass]="{ active: showWishList }"
+          (click)="getList()"
+        >
+          Wish List
+        </button>
+        <button
+          class="btn btn-light"
+          [ngClass]="{ active: showDayDivergence }"
+          (click)="openDayDiver()"
+        >
+          Divergence On Day
+        </button>
+      </div>
+      <div class="col-9">
+        <div *ngIf="showWishList">
+          <app-wish-list></app-wish-list>
+        </div>
+        <div *ngIf="false">
+          <div>
+            <h3>
+              Divergence In Last
+              {{ stockDivergenceService.lastCheckInterval }} Trading Hours
+            </h3>
+          </div>
+          <table class="table table-striped">
+            <thead class="thead-dark">
+              <tr>
+                <td>Stock Name</td>
+                <td>TIME</td>
+                <td>LAST TIME</td>
+                <td>Divergence Info</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let stock of stockDivergenceService.hourDivergenceMap
+                    | keyvalue
+                "
+              >
+                <td>{{ stock.key }}</td>
+                <td>{{ stock.value.timeStamp * 1000 | date: "short" }}</td>
+                <td>
+                  {{
+                    stock.value.lowerStockData.timeStamp * 1000 | date: "short"
+                  }}
+                </td>
+                <td>
+                  <button
+                    class="btn btn-info"
+                    (click)="openDivergence(stock.key)"
+                  >
+                    Info
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="showHourlyDivergence">
+          <app-day-divergence></app-day-divergence>
+        </div>
+        <div *ngIf="showDayDivergence">
+          <app-day-divergence></app-day-divergence>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

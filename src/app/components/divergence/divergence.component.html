@@ -1,4 +1,7 @@
 <div>
+  <div>
+    <h4 class="bg-success p-2">{{ apiService.stock }}</h4>
+  </div>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -8,6 +11,7 @@
         <td>Last Time</td>
         <td>Last Low</td>
         <td>Last RSI</td>
+        <td>Upside %</td>
       </tr>
     </thead>
     <tbody>
@@ -18,6 +22,7 @@
         <td>{{ stock.lowerStockData.timeStamp * 1000 | date: "short" }}</td>
         <td>{{ stock.lowerStockData.low }}</td>
         <td>{{ stock.lowerStockData.rsi }}</td>
+        <td>{{ stock.preMove }}</td>
       </tr>
     </tbody>
   </table>

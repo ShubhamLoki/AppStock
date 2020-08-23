@@ -14,23 +14,19 @@ export class ApiService {
   constructor(private httpClient: HttpClient) {}
 
   public getData() {
-    // const from = '1595745690';
-    // const to = '1596264090';
     this.to = Math.floor(Date.now() / 1000);
-    console.log('to ', this.to);
-
     return this.httpClient.get(
-      `${this.crosString}/${this.baseUrl}/${this.stock}.NS?formatted=true&crumb=w9FEupPhpmK&lang=en-IN&region=IN&interval=${this.timeInterval}&period1=${this.from}&period2=${this.to}&events=div%7Csplit&corsDomain=in.finance.yahoo.com`
+      `${this.baseUrl}/${this.stock}.NS?formatted=true&crumb=w9FEupPhpmK&lang=en-IN&region=IN&interval=${this.timeInterval}&period1=${this.from}&period2=${this.to}&events=div%7Csplit&corsDomain=in.finance.yahoo.com`
     );
   }
 
-  public getStockData(stockName) {
-    // const from = '1595745690';
-    // const to = '1596264090';
+  public getStockData(stockName, timeInterval?) {
     this.to = Math.floor(Date.now() / 1000);
-    console.log('to ', this.to);
+    if (!timeInterval) {
+      timeInterval = this.timeInterval;
+    }
     return this.httpClient.get(
-      `${this.crosString}/${this.baseUrl}/${stockName}.NS?formatted=true&crumb=w9FEupPhpmK&lang=en-IN&region=IN&interval=${this.timeInterval}&period1=${this.from}&period2=${this.to}&events=div%7Csplit&corsDomain=in.finance.yahoo.com`
+      `${this.baseUrl}/${stockName}.NS?formatted=true&crumb=w9FEupPhpmK&lang=en-IN&region=IN&interval=${this.timeInterval}&period1=${this.from}&period2=${this.to}&events=div%7Csplit&corsDomain=in.finance.yahoo.com`
     );
   }
 }

@@ -15,14 +15,15 @@ export class DivergenceComponent implements OnInit {
   listArr = [];
   stockName = '';
   constructor(
-    private apiService: ApiService,
-    private stockDivergenceService: StockDivergenceService
+    public apiService: ApiService,
+    public stockDivergenceService: StockDivergenceService
   ) {}
 
   ngOnInit(): void {
     this.stockDivergenceService
-      .calculateDivergence(this.apiService.stock)
+      .calculateDivergence(this.apiService.stock, this.apiService.timeInterval)
       .then((quoteArray) => {
+        this.stockDivergenceService.calculateUpsideAfterDivergence(quoteArray);
         quoteArray.forEach((stock: StockData) => {
           if (stock.lowerStockData) {
             this.listArr.push(stock);

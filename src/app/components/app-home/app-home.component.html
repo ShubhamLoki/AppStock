@@ -1,1 +1,31 @@
-<p>app-home works!</p>
+<div class="d-flex flex-row c-app-home-header mb-3">
+  <h3 class="mt-1 mr-2 ml-3">App Stock</h3>
+  <ul
+    ngbNav
+    #nav="ngbNav"
+    [(activeId)]="active"
+    class="nav-tabs"
+    (navChange)="navChangeEv()"
+  >
+    <li [ngbNavItem]="1">
+      <button
+        (click)="openDivergenceHome()"
+        class="btn btn-outline-light m-1 {{ divergenceActiveClass }}"
+      >
+        Divergence
+      </button>
+    </li>
+    <li [ngbNavItem]="2">
+      <button
+        (click)="openHeikinAshiHome()"
+        class="btn btn-outline-light m-1 {{ heikinAshiActiveClass }}"
+      >
+        Heikin Ashi
+      </button>
+    </li>
+  </ul>
+</div>
+<div class="d-flex flex-row">
+  <app-heiken-ashi-home *ngIf="showHeikinAshi"></app-heiken-ashi-home>
+  <app-divergence-home *ngIf="showDivergence"></app-divergence-home>
+</div>

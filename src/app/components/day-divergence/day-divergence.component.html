@@ -1,1 +1,38 @@
-<p>day-divergence works!</p>
+<div>
+  <div class="d-flex flex-row">
+    <h3>
+      Divergence In Last
+      {{ stockDivergenceService.lastCheckInterval }} Trading
+      {{ apiService.timeInterval == "1h" ? "hours" : "days" }}
+    </h3>
+    <h4 class="ml-auto">
+      {{ status }}
+    </h4>
+  </div>
+  <div>
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <td>Stock Name</td>
+          <td>TIME</td>
+          <td>LAST TIME</td>
+          <td>Divergence Info</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of localMap | keyvalue">
+          <td>{{ stock.key }}</td>
+          <td>{{ stock.value.timeStamp * 1000 | date: "short" }}</td>
+          <td>
+            {{ stock.value.lowerStockData.timeStamp * 1000 | date: "short" }}
+          </td>
+          <td>
+            <button class="btn btn-info" (click)="openDivergence(stock.key)">
+              Info
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
