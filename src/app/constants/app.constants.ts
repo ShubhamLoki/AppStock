@@ -393,6 +393,7 @@ export const STOCK_LIST = [
   'JINDALSTEL',
   // new
   'SHILPAMED',
+  'RIIL',
 ];
 
 export const PATHS = {
