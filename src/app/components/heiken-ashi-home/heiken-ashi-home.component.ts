@@ -12,8 +12,14 @@ export class HeikenAshiHomeComponent implements OnInit {
   showAllStockList = true;
   showTodayAbove55StockList = false;
   showNear55StockList = false;
+  showStockHistory = false;
+
+  historyStock = '';
 
   stockRSIArray = [];
+  status = 'Loading...';
+
+  near55List = [];
 
   constructor(public heikenAshiService: HeikenAshiService) {}
 
@@ -43,27 +49,37 @@ export class HeikenAshiHomeComponent implements OnInit {
     this.heikenAshiService
       .getCurrentRSIOfAll()
       .then((stockRSIArray: []) => {
-        console.log(stockRSIArray);
+        // console.log(stockRSIArray);
         // this.stockRSIArray = stockRSIArray;
+        this.status = 'Loaded!';
       })
       .catch((error) => {
         console.log(error);
       });
   }
 
-  public openGoingAbove55() {
+  public openGoingAbove55(): void {
     this.showAllStockList = false;
     this.showTodayAbove55StockList = true;
     this.showNear55StockList = false;
   }
-  public openAll() {
+  public openAll(): void {
     this.showAllStockList = true;
     this.showTodayAbove55StockList = false;
     this.showNear55StockList = false;
   }
-  public openNear55() {
+  public openNear55(): void {
+    this.near55List = this.heikenAshiService.getNear55();
     this.showAllStockList = false;
     this.showTodayAbove55StockList = false;
     this.showNear55StockList = true;
+  }
+
+  openHistory(stockName) {
+    this.historyStock = stockName;
+    this.showStockHistory = true;
+    this.showAllStockList = false;
+    this.showTodayAbove55StockList = false;
+    this.showNear55StockList = false;
   }
 }

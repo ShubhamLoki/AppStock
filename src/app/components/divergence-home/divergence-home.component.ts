@@ -13,7 +13,7 @@ export class DivergenceHomeComponent implements OnInit {
   // dataArray = [];
   showHourlyDivergence = false;
   showDayDivergence = false;
-  showWishList = false;
+  showWishList = true;
   timeInterval;
 
   constructor(

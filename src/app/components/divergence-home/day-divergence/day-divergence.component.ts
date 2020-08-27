@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { StockDivergenceService } from './../../services/stock.divergence.service';
+import { StockDivergenceService } from 'src/app/services/stock.divergence.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 

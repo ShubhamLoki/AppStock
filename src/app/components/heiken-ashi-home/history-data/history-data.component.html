@@ -1,0 +1,23 @@
+<div>
+  <div></div>
+  <div>
+    <table class="table">
+      <thead class="bg-light">
+        <tr>
+          <td>Time IST</td>
+          <td>Close</td>
+          <td>RSI</td>
+          <td>% Move from 55</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of quoteList; let i = index">
+          <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
+          <td>{{ stock.close }}</td>
+          <td>{{ stock.rsi }}</td>
+          <td>{{ stock.preMove }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

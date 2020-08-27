@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DivergenceComponent } from './divergence.component';
+import { HistoryDataComponent } from './history-data.component';
 
-describe('HourlyDivergenceComponent', () => {
-  let component: DivergenceComponent;
-  let fixture: ComponentFixture<DivergenceComponent>;
+describe('HistoryDataComponent', () => {
+  let component: HistoryDataComponent;
+  let fixture: ComponentFixture<HistoryDataComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DivergenceComponent]
+      declarations: [ HistoryDataComponent ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DivergenceComponent);
+    fixture = TestBed.createComponent(HistoryDataComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

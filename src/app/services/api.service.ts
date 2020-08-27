@@ -9,7 +9,7 @@ export class ApiService {
   stock = 'IOC';
   baseUrl = 'https://query2.finance.yahoo.com/v8/finance/chart';
   timeInterval = '1h';
-  from = '1588506036'; // 1588506036, 1595745690
+  from = '1577836800'; // 1588506036, 1595745690, 1 JAN 2020 - 1577836800
   to;
   constructor(private httpClient: HttpClient) {}
 

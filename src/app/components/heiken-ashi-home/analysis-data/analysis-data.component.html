@@ -1,0 +1,20 @@
+<div>
+  <table class="table">
+    <thead class="bg-light">
+      <tr>
+        <td>Stock Name</td>
+        <td>Time IST</td>
+        <td>RSI</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of localStockArray; let i = index">
+        <td>{{ stock.stock }}</td>
+        <td>{{ stock.stockObj.timeStamp * 1000 | date: "short" }}</td>
+        <td>
+          {{ stock.stockObj.rsi }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

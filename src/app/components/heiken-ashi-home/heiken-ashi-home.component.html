@@ -7,17 +7,17 @@
       <div class="d-flex flex-column col-3">
         <button
           class="btn btn-light"
-          [ngClass]="{ active: showTodayAbove55StockList }"
-          (click)="openGoingAbove55()"
-        >
-          Today Above 55
-        </button>
-        <button
-          class="btn btn-light"
           [ngClass]="{ active: showAllStockList }"
           (click)="openAll()"
         >
           All Stocks
+        </button>
+        <button
+          class="btn btn-light"
+          [ngClass]="{ active: showTodayAbove55StockList }"
+          (click)="openGoingAbove55()"
+        >
+          Today Above 55
         </button>
         <button
           class="btn btn-light"
@@ -31,6 +31,9 @@
         <div class="d-flex flex-column" *ngIf="showAllStockList">
           <div class="d-flex flex-row bg-light-gray">
             <h4>List Of All Stocks with current RSI</h4>
+            <h4 class="ml-auto">
+              {{ status }}
+            </h4>
           </div>
           <table class="table">
             <thead class="bg-light">
@@ -42,6 +45,7 @@
                 <td>Low</td>
                 <td>Close</td> -->
                 <td>RSI</td>
+                <td>History</td>
               </tr>
             </thead>
             <tbody>
@@ -62,12 +66,29 @@
               >
                 <td>{{ stock.stockName }}</td>
                 <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
-                <td [ngClass]="{ 'bg-success': stock.rsi >= 55 }">
+                <td [ngClass]="{ 'text-success': stock.rsi >= 55 }">
                   {{ stock.rsi }}
+                </td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-link"
+                    (click)="openHistory(stock.stockName)"
+                  >
+                    History
+                  </button>
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <div *ngIf="showTodayAbove55StockList">
+          <app-analysis-data></app-analysis-data>
+        </div>
+        <div *ngIf="showStockHistory">
+          <app-history-data [stockName]="historyStock"></app-history-data>
+        </div>
+        <div *ngIf="showNear55StockList">
+          <app-analysis-data [localStockArray]="near55List"></app-analysis-data>
         </div>
       </div>
     </div>

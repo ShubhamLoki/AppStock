@@ -1,3 +1,4 @@
+import { STOCK_LIST } from './../constants/app.constants';
 import { STOCK_LIST_HEIKIN } from './../constants/stock-list.constants';
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
@@ -10,8 +11,9 @@ import { times } from 'lodash';
 export class HeikenAshiService {
   rsiInterval = 14;
   upsideList = [];
-  stockArray = STOCK_LIST_HEIKIN;
+  stockArray = STOCK_LIST; // STOCK_LIST_HEIKIN
   stockLatestDataArray = [];
+  StocksQuoteArrayMap = new Map<string, StockData[]>();
 
   stockQuoteArrayMap = new Map<string, any[]>();
   constructor(private apiService: ApiService) {}
@@ -19,7 +21,6 @@ export class HeikenAshiService {
   calculateHeikenAshi(stockName): Promise<any> {
     const returnPromise = new Promise((resolve, reject) => {
       this.apiService.timeInterval = '1d';
-
       this.apiService.getStockData(stockName).subscribe((data: any) => {
         // console.log(stockName);
 
@@ -139,66 +140,71 @@ export class HeikenAshiService {
           }
           // ! END timeStampArr.forEach
         });
-        this.stockQuoteArrayMap.set(stockName, quoteArray);
+        // this.stockQuoteArrayMap.set(stockName, quoteArray);
         resolve(quoteArray);
       });
     });
     return returnPromise;
   }
 
-  calculateUpside(stockName): Promise<any> {
-    // const stockName = 'ASTRAL'; // TITAN
+  calculateUpside(stockName): StockData[] {
+    const quoteArray = this.StocksQuoteArrayMap.get(stockName);
+    const newMoveArr: StockData[] = [];
+    let preMove = 0;
 
-    const retPromise = new Promise((resolve, reject) => {
-      this.calculateHeikenAshi(stockName)
-        .then((quoteArray) => {
-          console.log(quoteArray);
-          quoteArray.forEach((stock: StockData, index) => {
-            if (index > 1) {
-              const prevStock: StockData = quoteArray[index - 1];
-              if (stock.rsi >= 55 && prevStock.rsi < 55) {
-                // console.log('UP ', new Date(stock.timeStamp * 1000));
-                this.upsideList.push({ stockIndex: index, move: 'up' });
-              } else if (stock.rsi <= 55 && prevStock.rsi > 55) {
-                // console.log('DOWN ', new Date(stock.timeStamp * 1000));
-                this.upsideList.push({ stockIndex: index, move: 'down' });
-              }
-            }
+    console.log(quoteArray);
+    quoteArray.forEach((stock: StockData, index) => {
+      if (index > 1) {
+        const prevStock: StockData = quoteArray[index - 1];
+        if (stock.rsi >= 55 && prevStock.rsi < 55) {
+          this.upsideList.push({
+            stockData: stock,
+            stockIndex: index,
+            move: 'up',
           });
-          if (this.upsideList[this.upsideList.length - 1].move === 'up') {
-            const lastIndex = quoteArray.length - 1;
-            const lastStock = quoteArray[lastIndex];
-            this.upsideList.push({ stockIndex: lastIndex, move: 'down' });
-          }
-          const tempArr = [];
-          console.log(this.upsideList);
-          let preMove = 0;
-          this.upsideList.forEach((moveValue, moveIndex) => {
-            if (moveValue.move === 'up') {
-              const newArray = quoteArray.slice(
-                moveValue.stockIndex,
-                this.upsideList[moveIndex + 1].stockIndex
-              );
-              newArray.forEach((stock: StockData, preIndex) => {
-                if (preIndex !== newArray.length - 1) {
-                  const currMove =
-                    (stock.close * 100) / newArray[0].close - 100;
-                  preMove = Math.max(currMove, preMove);
-                }
-              });
-            } else {
-              tempArr.push({ stockIndex: moveValue.stockIndex, move: preMove });
-              preMove = 0;
-            }
+        } else if (stock.rsi <= 55 && prevStock.rsi > 55) {
+          this.upsideList.push({
+            stockData: stock,
+            stockIndex: index,
+            move: 'down',
           });
-          console.log(tempArr);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        }
+      }
     });
-
-    return retPromise;
+    if (this.upsideList[this.upsideList.length - 1].move === 'up') {
+      const lastIndex = quoteArray.length - 1;
+      const lastStock = quoteArray[lastIndex];
+      this.upsideList.push({
+        stockData: lastStock,
+        stockIndex: quoteArray.length - 1,
+        move: 'down',
+      });
+    }
+    console.log(this.upsideList);
+    let stockUp;
+    this.upsideList.forEach((moveValue, moveIndex) => {
+      if (moveValue.move === 'up') {
+        stockUp = moveValue.stockData;
+        const newArray = quoteArray.slice(
+          moveValue.stockIndex,
+          this.upsideList[moveIndex + 1].stockIndex
+        );
+        newArray.forEach((stock: StockData, preIndex) => {
+          if (preIndex !== newArray.length - 1) {
+            const currMove = (stock.close * 100) / newArray[0].close - 100;
+            preMove = Math.max(currMove, preMove);
+          }
+        });
+      } else {
+        if (stockUp) {
+          stockUp.preMove = preMove;
+          newMoveArr.push(stockUp);
+        }
+        preMove = 0;
+      }
+    });
+    console.log(newMoveArr);
+    return newMoveArr;
   }
 
   fetchStockParallel() {
@@ -218,7 +224,7 @@ export class HeikenAshiService {
 
         fetchPromise(stockName).then((quoteArray) => {
           fetched.push(quoteArray);
-
+          this.StocksQuoteArrayMap.set(stockName, quoteArray);
           if (fetched.length === this.stockArray.length) {
             console.log('****************************');
             resolve(fetched);
@@ -250,5 +256,26 @@ export class HeikenAshiService {
           reject(error);
         });
     });
+  }
+
+  getNear55(): any[] {
+    const localStockArray: any[] = [];
+    this.StocksQuoteArrayMap.forEach((qouteArray: StockData[], stockName) => {
+      const lastIdex = qouteArray.length - 1;
+      const lastStockData: StockData = qouteArray[lastIdex];
+      const secLastStockData: StockData = qouteArray[lastIdex - 1];
+      if (
+        lastStockData.rsi >= 50 &&
+        lastStockData.rsi <= 55 &&
+        secLastStockData.rsi <= lastStockData.rsi
+      ) {
+        localStockArray.push({
+          stock: stockName,
+          stockObj: lastStockData,
+        });
+      }
+    });
+
+    return localStockArray;
   }
 }

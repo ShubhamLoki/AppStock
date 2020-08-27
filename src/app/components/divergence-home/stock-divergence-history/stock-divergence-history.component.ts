@@ -6,11 +6,11 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 
 @Component({
-  selector: 'app-hourly-divergence',
-  templateUrl: './divergence.component.html',
-  styleUrls: ['./divergence.component.scss'],
+  selector: 'app-stock-divergence-history',
+  templateUrl: './stock-divergence-history.component.html',
+  styleUrls: ['./stock-divergence-history.component.scss'],
 })
-export class DivergenceComponent implements OnInit {
+export class StockDivergenceHistoryComponent implements OnInit {
   title = 'DemoApp';
   listArr = [];
   stockName = '';
@@ -32,6 +32,7 @@ export class DivergenceComponent implements OnInit {
       });
   }
 
+  // ! Not In Use
   localDivergence() {
     this.apiService.getData().subscribe((data: any) => {
       this.stockName = this.apiService.stock;

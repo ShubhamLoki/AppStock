@@ -1,0 +1,46 @@
+<div>
+  <div class="d-flex bg-light" *ngIf="!showStockWishList">
+    <h4 class="m-2">
+      {{ apiService.stock }} - On
+      {{ apiService.timeInterval == "1h" ? "Hour" : "Day" }} Divergence History
+    </h4>
+    <button class="btn btn-primary m-2 ml-auto" (click)="showWishList()">
+      Back
+    </button>
+  </div>
+  <div class="d-flex flex-column" *ngIf="showStockWishList">
+    <div class="d-flex justify-content-center">
+      <h2>Stock List</h2>
+    </div>
+    <table>
+      <thead class="bg-light p-2">
+        <tr>
+          <td>Stock Name</td>
+          <td>Hourly Divergence</td>
+          <td>Day Divergence</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of stockArray; let i = index">
+          <td>{{ stock }}</td>
+          <td>
+            <button class="btn btn-link" (click)="openHourlyDivergence(stock)">
+              Hourly
+            </button>
+          </td>
+          <td>
+            <button class="btn btn-link" (click)="openDayDivergence(stock)">
+              Day
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex flex-row" *ngIf="showHourlyDataList">
+    <app-stock-divergence-history></app-stock-divergence-history>
+  </div>
+  <div class="d-flex flex-row" *ngIf="showDayDataList">
+    <app-stock-divergence-history></app-stock-divergence-history>
+  </div>
+</div>
