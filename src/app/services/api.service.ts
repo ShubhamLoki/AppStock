@@ -29,4 +29,33 @@ export class ApiService {
       `${this.baseUrl}/${stockName}.NS?formatted=true&crumb=w9FEupPhpmK&lang=en-IN&region=IN&interval=${this.timeInterval}&period1=${this.from}&period2=${this.to}&events=div%7Csplit&corsDomain=in.finance.yahoo.com`
     );
   }
+
+  getInsiderTrading() {
+    const toDayDate = new Date();
+    const todayDateStr = `${toDayDate.getDate()}-${
+      toDayDate.getMonth() + 1
+    }-${toDayDate.getFullYear()}`; //27-08-2020
+    const fromDate = new Date();
+    // fromDate.setDate(toDayDate.getDate() - 1);
+    fromDate.setMonth(toDayDate.getMonth() - 3);
+    const fromDateStr = `${fromDate.getDate()}-${
+      fromDate.getMonth() + 1
+    }-${fromDate.getFullYear()}`;
+
+    console.log(todayDateStr);
+    console.log(fromDateStr);
+
+    return this.httpClient.get(
+      `https://www.nseindia.com/api/corporates-pit?index=equities&from_date=${fromDateStr}&to_date=${todayDateStr}`
+    );
+
+    // `https://www.nseindia.com/api/corporates-pit?index=equities&from_date=26-08-2020&to_date=27-08-2020`
+  }
+
+  getCorpInfo(stockName) {
+    // ALEMBICLTD
+    return this.httpClient.get(
+      `https://www.nseindia.com/api/quote-equity?symbol=${stockName}&section=corp_info`
+    );
+  }
 }

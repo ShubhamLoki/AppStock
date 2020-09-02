@@ -24,33 +24,9 @@ export class HeikenAshiHomeComponent implements OnInit {
   constructor(public heikenAshiService: HeikenAshiService) {}
 
   ngOnInit(): void {
-    // const stockName = 'ASTRAL'; // TITAN
-    // this.heikenAshiService
-    //   .calculateHeikenAshi(stockName)
-    //   .then((quoteArray) => {
-    //     // console.log(quoteArray);
-    //     this.stockList = quoteArray;
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
-
-    // this.heikenAshiService.calculateUpside(stockName);
-
-    // this.heikenAshiService
-    //   .fetchStockParallel()
-    //   .then((allFetched) => {
-    //     console.log(allFetched);
-    //   })
-    //   .catch((error) => {
-    //     error(error);
-    //   });
-
     this.heikenAshiService
       .getCurrentRSIOfAll()
       .then((stockRSIArray: []) => {
-        // console.log(stockRSIArray);
-        // this.stockRSIArray = stockRSIArray;
         this.status = 'Loaded!';
       })
       .catch((error) => {
@@ -62,20 +38,23 @@ export class HeikenAshiHomeComponent implements OnInit {
     this.showAllStockList = false;
     this.showTodayAbove55StockList = true;
     this.showNear55StockList = false;
+    this.showStockHistory = false;
   }
   public openAll(): void {
     this.showAllStockList = true;
     this.showTodayAbove55StockList = false;
     this.showNear55StockList = false;
+    this.showStockHistory = false;
   }
   public openNear55(): void {
     this.near55List = this.heikenAshiService.getNear55();
     this.showAllStockList = false;
     this.showTodayAbove55StockList = false;
     this.showNear55StockList = true;
+    this.showStockHistory = false;
   }
 
-  openHistory(stockName) {
+  public openHistory(stockName): void {
     this.historyStock = stockName;
     this.showStockHistory = true;
     this.showAllStockList = false;

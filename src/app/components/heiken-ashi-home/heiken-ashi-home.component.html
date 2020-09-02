@@ -40,24 +40,11 @@
               <tr>
                 <td>Stock Name</td>
                 <td>Time IST</td>
-                <!-- <td>Open</td>
-                <td>High</td>
-                <td>Low</td>
-                <td>Close</td> -->
                 <td>RSI</td>
                 <td>History</td>
               </tr>
             </thead>
             <tbody>
-              <!-- <tr *ngFor="let stock of stockList; let i = index">
-                <td>{{ stock.timeStamp * 1000 | date: "short" }}</td>
-                <td>{{ stock.open }}</td>
-                <td>{{ stock.high }}</td>
-                <td>{{ stock.low }}</td>
-                <td>{{ stock.close }}</td>
-                <td>{{ stock.rsi }}</td>
-              </tr> -->
-
               <tr
                 *ngFor="
                   let stock of heikenAshiService.stockLatestDataArray;
@@ -85,6 +72,15 @@
           <app-analysis-data></app-analysis-data>
         </div>
         <div *ngIf="showStockHistory">
+          <div class="d-flex flex-row bg-light-gray">
+            <h4>History Of RSI For -</h4>
+            <h4 class="ml-2">
+              {{ historyStock }}
+            </h4>
+            <button class="btn btn-primary m-2 ml-auto" (click)="openAll()">
+              Back
+            </button>
+          </div>
           <app-history-data [stockName]="historyStock"></app-history-data>
         </div>
         <div *ngIf="showNear55StockList">

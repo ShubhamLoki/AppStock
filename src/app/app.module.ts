@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { ApiService } from './services/api.service';
 import { StockDivergenceService } from './services/stock.divergence.service';
 import { HeikenAshiService } from './services/heiken-ashi.service';
+import { PromotersBuyService } from './services/promoters-buy.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import { DivergenceHomeComponent } from './components/divergence-home/divergence-home.component';
@@ -22,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AnalysisDataComponent } from './components/heiken-ashi-home/analysis-data/analysis-data.component';
 import { HistoryDataComponent } from './components/heiken-ashi-home/history-data/history-data.component';
+import { PromotersBuyHomeComponent } from './components/promoters-buy-home/promoters-buy-home.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { HistoryDataComponent } from './components/heiken-ashi-home/history-data
     AppHomeComponent,
     AnalysisDataComponent,
     HistoryDataComponent,
+    PromotersBuyHomeComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -45,7 +48,12 @@ import { HistoryDataComponent } from './components/heiken-ashi-home/history-data
     MatTabsModule,
     NgbModule,
   ],
-  providers: [ApiService, StockDivergenceService, HeikenAshiService],
+  providers: [
+    ApiService,
+    StockDivergenceService,
+    HeikenAshiService,
+    PromotersBuyService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

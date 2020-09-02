@@ -8,28 +8,26 @@ import { Component, OnInit } from '@angular/core';
 export class AppHomeComponent implements OnInit {
   showDivergence = false;
   showHeikinAshi = false;
-  active = 1;
-  divergenceActiveClass;
-  heikinAshiActiveClass;
+  showPromoters = false;
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  openDivergenceHome() {
+  openDivergenceHome(): void {
     this.showDivergence = true;
     this.showHeikinAshi = false;
-    this.divergenceActiveClass = 'active';
-    this.heikinAshiActiveClass = '';
+    this.showPromoters = false;
   }
-  openHeikinAshiHome() {
+  openHeikinAshiHome(): void {
     this.showDivergence = false;
     this.showHeikinAshi = true;
-    this.divergenceActiveClass = '';
-    this.heikinAshiActiveClass = 'active';
+    this.showPromoters = false;
   }
 
-  navChangeEv() {
-    this.active = 2;
+  openPromotersBuyHome(): void {
+    this.showDivergence = false;
+    this.showHeikinAshi = false;
+    this.showPromoters = true;
   }
 }

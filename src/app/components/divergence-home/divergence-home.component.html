@@ -31,49 +31,6 @@
         <div *ngIf="showWishList">
           <app-wish-list></app-wish-list>
         </div>
-        <!-- <div *ngIf="false">
-          <div>
-            <h3>
-              Divergence In Last
-              {{ stockDivergenceService.lastCheckInterval }} Trading Hours
-            </h3>
-          </div>
-          <table class="table table-striped">
-            <thead class="thead-dark">
-              <tr>
-                <td>Stock Name</td>
-                <td>TIME</td>
-                <td>LAST TIME</td>
-                <td>Divergence Info</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="
-                  let stock of stockDivergenceService.hourDivergenceMap
-                    | keyvalue
-                "
-              >
-                <td>{{ stock.key }}</td>
-                <td>{{ stock.value.timeStamp * 1000 | date: "short" }}</td>
-                <td>
-                  {{
-                    stock.value.lowerStockData.timeStamp * 1000 | date: "short"
-                  }}
-                </td>
-                <td>
-                  <button
-                    class="btn btn-info"
-                    (click)="openDivergence(stock.key)"
-                  >
-                    Info
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div> -->
-
         <div *ngIf="showHourlyDivergence">
           <app-day-divergence></app-day-divergence>
         </div>

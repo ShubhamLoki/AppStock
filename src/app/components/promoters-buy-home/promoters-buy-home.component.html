@@ -1,0 +1,37 @@
+<div>
+  <div>
+    <h3>{{ status }}</h3>
+  </div>
+  <table class="table">
+    <!-- this.stockValueMap -->
+    <thead class="bg-light">
+      <tr>
+        <td>Stock Name</td>
+        <td>allSeqVal</td>
+        <td>stockAvgBuyPrice</td>
+        <td>promoterShareholding</td>
+        <td>isMarketSell</td>
+        <td>pledgePer</td>
+        <td>noOfShareSale</td>
+        <td>buyThis</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let promoter of promotersBuyService.stockValueMap | keyvalue;
+          let i = index
+        "
+      >
+        <td>{{ promoter.key }}</td>
+        <td>{{ promoter.value.allSeqVal }}</td>
+        <td>{{ promoter.value.stockAvgBuyPrice }}</td>
+        <td>{{ promoter.value.promoterShareholding }}</td>
+        <td>{{ promoter.value.isMarketSell }}</td>
+        <td>{{ promoter.value.pledgePer }}</td>
+        <td>{{ promoter.value.noOfShareSale }}</td>
+        <td>{{ promoter.value.buyThis }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

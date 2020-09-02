@@ -1,5 +1,8 @@
 import { Router } from '@angular/router';
-import { StockDivergenceService } from 'src/app/services/stock.divergence.service';
+import {
+  StockDivergenceService,
+  StockData,
+} from 'src/app/services/stock.divergence.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -11,6 +14,8 @@ import { ApiService } from 'src/app/services/api.service';
 export class DayDivergenceComponent implements OnInit {
   localMap = new Map();
   status = 'Loading...';
+  showDataList = false;
+  localArray: StockData[] = [];
 
   constructor(
     public stockDivergenceService: StockDivergenceService,
@@ -19,19 +24,6 @@ export class DayDivergenceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.apiService.timeInterval = '1h';
-    // this.stockDivergenceService
-    //   .calculateAllDivergenceTest()
-    //   .then((divergenceMap: any) => {
-    //     this.localMap = divergenceMap;
-    //     console.log('Loaded***');
-    //   this.status = 'Loaded!';
-    //     // this.dataArray = divergenceMap;
-    //   });
-    // setInterval(() => {
-    //   console.log('**** Divergence Calculations *****');
-    //   this.stockDivergenceService.calculateAllDivergence();
-    // }, 1.8e6);
     console.log(this.apiService.timeInterval);
     this.stockDivergenceService
       .fetchStockParallel(this.apiService.timeInterval)
@@ -41,13 +33,24 @@ export class DayDivergenceComponent implements OnInit {
         } else {
           this.localMap = this.stockDivergenceService.dayDivergenceMap;
         }
+        this.localArray = [];
+        this.localMap.forEach((stockData: StockData, stockName) => {
+          stockData.stockName = stockName;
+          this.localArray.push(stockData);
+        });
+
+        this.localArray.sort((a, b) => (a.timeStamp < b.timeStamp ? 1 : -1));
         console.log('Loaded***');
         this.status = 'Loaded!';
       });
   }
 
-  openDivergence(stockName) {
+  openDivergence(stockName): void {
     this.apiService.stock = stockName;
-    this.router.navigate(['hourly']);
+    this.showDataList = true;
+  }
+
+  showDivergenceList(): void {
+    this.showDataList = false;
   }
 }
