@@ -435,6 +435,7 @@ export class StockData {
   divergence;
   lowerStockData;
   preMove;
+  volumePer;
 
   constructor() {}
 }

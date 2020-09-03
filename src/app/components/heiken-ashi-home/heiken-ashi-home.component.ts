@@ -19,7 +19,7 @@ export class HeikenAshiHomeComponent implements OnInit {
   stockRSIArray = [];
   status = 'Loading...';
 
-  near55List = [];
+  analysisList = [];
 
   constructor(public heikenAshiService: HeikenAshiService) {}
 
@@ -35,6 +35,7 @@ export class HeikenAshiHomeComponent implements OnInit {
   }
 
   public openGoingAbove55(): void {
+    this.analysisList = this.heikenAshiService.getAbove55();
     this.showAllStockList = false;
     this.showTodayAbove55StockList = true;
     this.showNear55StockList = false;
@@ -47,7 +48,7 @@ export class HeikenAshiHomeComponent implements OnInit {
     this.showStockHistory = false;
   }
   public openNear55(): void {
-    this.near55List = this.heikenAshiService.getNear55();
+    this.analysisList = this.heikenAshiService.getNear55();
     this.showAllStockList = false;
     this.showTodayAbove55StockList = false;
     this.showNear55StockList = true;

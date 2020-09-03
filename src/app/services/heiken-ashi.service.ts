@@ -207,7 +207,7 @@ export class HeikenAshiService {
     return newMoveArr;
   }
 
-  fetchStockParallel() {
+  fetchStockParallel(): Promise<any> {
     return new Promise((resolve, reject) => {
       const fetched: any[] = [];
       let index = 0;
@@ -269,6 +269,31 @@ export class HeikenAshiService {
         lastStockData.rsi <= 55 &&
         secLastStockData.rsi <= lastStockData.rsi
       ) {
+        const volumePer =
+          ((lastStockData.volume - secLastStockData.volume) * 100) /
+          secLastStockData.volume;
+        lastStockData.volumePer = Math.round(volumePer * 100) / 100;
+        localStockArray.push({
+          stock: stockName,
+          stockObj: lastStockData,
+        });
+      }
+    });
+
+    return localStockArray;
+  }
+
+  getAbove55(): any[] {
+    const localStockArray: any[] = [];
+    this.StocksQuoteArrayMap.forEach((qouteArray: StockData[], stockName) => {
+      const lastIdex = qouteArray.length - 1;
+      const lastStockData: StockData = qouteArray[lastIdex];
+      const secLastStockData: StockData = qouteArray[lastIdex - 1];
+      if (lastStockData.rsi >= 55 && secLastStockData.rsi <= 55) {
+        const volumePer =
+          ((lastStockData.volume - secLastStockData.volume) * 100) /
+          secLastStockData.volume;
+        lastStockData.volumePer = Math.round(volumePer * 100) / 100;
         localStockArray.push({
           stock: stockName,
           stockObj: lastStockData,

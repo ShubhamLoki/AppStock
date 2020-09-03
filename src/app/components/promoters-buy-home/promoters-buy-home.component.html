@@ -1,5 +1,5 @@
 <div>
-  <div>
+  <div class="d-flex flex-row justify-content-center">
     <h3>{{ status }}</h3>
   </div>
   <table class="table">
@@ -7,13 +7,13 @@
     <thead class="bg-light">
       <tr>
         <td>Stock Name</td>
-        <td>allSeqVal</td>
-        <td>stockAvgBuyPrice</td>
-        <td>promoterShareholding</td>
-        <td>isMarketSell</td>
-        <td>pledgePer</td>
-        <td>noOfShareSale</td>
-        <td>buyThis</td>
+        <td>Total Sequrity</td>
+        <td>Stock Avg Buy Price</td>
+        <td>Promoter Shareholding %</td>
+        <td>Is Market Sell</td>
+        <td>Pledge %</td>
+        <td>No Of Share Sale</td>
+        <td>Buy This</td>
       </tr>
     </thead>
     <tbody>
@@ -22,6 +22,7 @@
           let promoter of promotersBuyService.stockValueMap | keyvalue;
           let i = index
         "
+        [ngClass]="{ 'bg-warning': promoter.value.buyThis }"
       >
         <td>{{ promoter.key }}</td>
         <td>{{ promoter.value.allSeqVal }}</td>

@@ -69,7 +69,9 @@
           </table>
         </div>
         <div *ngIf="showTodayAbove55StockList">
-          <app-analysis-data></app-analysis-data>
+          <app-analysis-data
+            [localStockArray]="analysisList"
+          ></app-analysis-data>
         </div>
         <div *ngIf="showStockHistory">
           <div class="d-flex flex-row bg-light-gray">
@@ -84,7 +86,9 @@
           <app-history-data [stockName]="historyStock"></app-history-data>
         </div>
         <div *ngIf="showNear55StockList">
-          <app-analysis-data [localStockArray]="near55List"></app-analysis-data>
+          <app-analysis-data
+            [localStockArray]="analysisList"
+          ></app-analysis-data>
         </div>
       </div>
     </div>

@@ -5,6 +5,8 @@
         <td>Stock Name</td>
         <td>Time IST</td>
         <td>RSI</td>
+        <td>Volume</td>
+        <td>Volume Up %</td>
       </tr>
     </thead>
     <tbody>
@@ -13,6 +15,12 @@
         <td>{{ stock.stockObj.timeStamp * 1000 | date: "short" }}</td>
         <td>
           {{ stock.stockObj.rsi }}
+        </td>
+        <td>
+          {{ stock.stockObj.volume }}
+        </td>
+        <td>
+          {{ stock.stockObj.volumePer }}
         </td>
       </tr>
     </tbody>
