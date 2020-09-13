@@ -5,6 +5,7 @@
         <td>Stock Name</td>
         <td>Time IST</td>
         <td>RSI</td>
+        <td class="text-right">Day Change</td>
         <td>Volume</td>
         <td>Volume Up %</td>
       </tr>
@@ -15,6 +16,14 @@
         <td>{{ stock.stockObj.timeStamp * 1000 | date: "short" }}</td>
         <td>
           {{ stock.stockObj.rsi }}
+        </td>
+        <td
+          class="text-right"
+          [ngClass]="
+            stock.stockObj.dayChangePer > 0 ? 'text-success' : 'text-danger'
+          "
+        >
+          {{ stock.stockObj.dayChangePer }} %
         </td>
         <td>
           {{ stock.stockObj.volume }}

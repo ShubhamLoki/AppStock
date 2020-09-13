@@ -1,4 +1,7 @@
-import { PromotersBuyService } from './../../services/promoters-buy.service';
+import {
+  PromotersBuyService,
+  Promoter,
+} from './../../services/promoters-buy.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,6 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PromotersBuyHomeComponent implements OnInit {
   status = '';
+  localStockArray;
   constructor(public promotersBuyService: PromotersBuyService) {}
 
   ngOnInit(): void {
@@ -15,6 +19,17 @@ export class PromotersBuyHomeComponent implements OnInit {
     this.promotersBuyService
       .getInsiderTradingData()
       .then((data) => {
+        this.localStockArray = [];
+        this.promotersBuyService.stockValueMap.forEach(
+          (promoterData: Promoter, stockName) => {
+            promoterData.stockName = stockName;
+            this.localStockArray.push(promoterData);
+          }
+        );
+
+        this.localStockArray.sort((a, b) =>
+          a.lastBuyDateTime < b.lastBuyDateTime ? 1 : -1
+        );
         console.log('****** Loaded');
         this.status = 'Loaded!';
       })

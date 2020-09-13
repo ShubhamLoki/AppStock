@@ -17,6 +17,7 @@ export class StockDivergenceService {
 
   constructor(private apiService: ApiService) {}
 
+  // ! Not In Use
   calculateAllDivergence() {
     console.log('*** calculateAllDivergence');
     const resultPromise = new Promise((resolve, reject) => {
@@ -169,6 +170,7 @@ export class StockDivergenceService {
     return resultPromise;
   }
 
+  // ! Not In Use
   calculateAllDivergenceTest() {
     const resultPromise = new Promise((resolve, reject) => {
       this.stockArray.forEach((stockName, nameIntex) => {
@@ -436,6 +438,7 @@ export class StockData {
   lowerStockData;
   preMove;
   volumePer;
+  dayChangePer;
 
   constructor() {}
 }

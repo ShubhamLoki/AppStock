@@ -44,12 +44,17 @@ export class PromotersBuyService {
           ) {
             if (stock.acqMode === this.M_P) {
               let oldValue: Promoter = this.stockValueMap.get(stockName);
+              const acqToDt = new Date(stock.acqtoDt);
               if (oldValue) {
                 oldValue.allSeqVal += Number(stock.secVal);
+                if (oldValue.lastBuyDateTime < acqToDt) {
+                  oldValue.lastBuyDateTime = acqToDt;
+                }
                 this.stockValueMap.set(stockName, oldValue);
               } else {
                 oldValue = new Promoter();
                 oldValue.allSeqVal = Number(stock.secVal);
+                oldValue.lastBuyDateTime = acqToDt;
                 this.stockValueMap.set(stockName, oldValue);
               }
             }
@@ -225,6 +230,7 @@ export class PromotersBuyService {
 }
 
 export class Promoter {
+  stockName;
   allSeqVal;
   stockAvgBuyPrice;
   promoterShareholding;
@@ -232,6 +238,7 @@ export class Promoter {
   pledgePer;
   noOfShareSale;
   buyThis;
+  lastBuyDateTime;
   constructor() {
     this.isMarketSell = false;
     this.allSeqVal = 0;

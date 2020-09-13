@@ -12,6 +12,7 @@
     </li>
     <li [ngbNavItem]="2">
       <button
+        *ngIf="true"
         class="btn btn-outline-light m-1"
         (click)="openHeikinAshiHome()"
         [ngClass]="{ active: showHeikinAshi }"

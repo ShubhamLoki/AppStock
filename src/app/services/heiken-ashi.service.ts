@@ -57,9 +57,16 @@ export class HeikenAshiService {
           stockData.low = Math.round(listData.low[timeIndex] * 100) / 100;
           stockData.close = Math.round(listData.close[timeIndex] * 100) / 100;
           stockData.volume = Math.round(listData.volume[timeIndex] * 100) / 100;
-
+          if (timeIndex >= 1) {
+            const lastClose = listData.close[timeIndex - 1];
+            stockData.dayChangePer =
+              ((stockData.close - lastClose) * 100) / lastClose;
+            stockData.dayChangePer =
+              Math.round(stockData.dayChangePer * 100) / 100;
+          }
           stockDataHA.stockName = stockName;
           stockDataHA.timeStamp = timeStamp;
+          stockDataHA.dayChangePer = stockData.dayChangePer;
           stockDataHA.volume =
             Math.round(listData.volume[timeIndex] * 100) / 100;
           // console.log(quoteArray);
@@ -279,27 +286,60 @@ export class HeikenAshiService {
         });
       }
     });
+    localStockArray.sort((a, b) =>
+      a.stockObj.volumePer < b.stockObj.volumePer ? 1 : -1
+    );
+    return localStockArray;
+  }
+
+  getAbove55(dayCount): any[] {
+    const localStockArray: any[] = [];
+    this.StocksQuoteArrayMap.forEach((qouteArray: StockData[], stockName) => {
+      if (qouteArray.length > dayCount + 1) {
+        const lastIdex = qouteArray.length - 1 - dayCount;
+        const lastStockData: StockData = qouteArray[lastIdex];
+        const secLastStockData: StockData = qouteArray[lastIdex - 1];
+        if (lastStockData.rsi >= 55 && secLastStockData.rsi <= 55) {
+          const volumePer =
+            ((lastStockData.volume - secLastStockData.volume) * 100) /
+            secLastStockData.volume;
+          lastStockData.volumePer = Math.round(volumePer * 100) / 100;
+          localStockArray.push({
+            stock: stockName,
+            stockObj: lastStockData,
+          });
+        }
+      }
+    });
+    localStockArray.sort((a, b) =>
+      a.stockObj.volumePer < b.stockObj.volumePer ? 1 : -1
+    );
 
     return localStockArray;
   }
 
-  getAbove55(): any[] {
+  public getAllAbove55(): any[] {
     const localStockArray: any[] = [];
     this.StocksQuoteArrayMap.forEach((qouteArray: StockData[], stockName) => {
-      const lastIdex = qouteArray.length - 1;
-      const lastStockData: StockData = qouteArray[lastIdex];
-      const secLastStockData: StockData = qouteArray[lastIdex - 1];
-      if (lastStockData.rsi >= 55 && secLastStockData.rsi <= 55) {
-        const volumePer =
-          ((lastStockData.volume - secLastStockData.volume) * 100) /
-          secLastStockData.volume;
-        lastStockData.volumePer = Math.round(volumePer * 100) / 100;
-        localStockArray.push({
-          stock: stockName,
-          stockObj: lastStockData,
-        });
+      if (qouteArray.length > 2) {
+        const lastIdex = qouteArray.length - 1;
+        const lastStockData: StockData = qouteArray[lastIdex];
+        const secLastStockData: StockData = qouteArray[lastIdex - 1];
+        if (lastStockData.rsi >= 55) {
+          const volumePer =
+            ((lastStockData.volume - secLastStockData.volume) * 100) /
+            secLastStockData.volume;
+          lastStockData.volumePer = Math.round(volumePer * 100) / 100;
+          localStockArray.push({
+            stock: stockName,
+            stockObj: lastStockData,
+          });
+        }
       }
     });
+    localStockArray.sort((a, b) =>
+      a.stockObj.volumePer < b.stockObj.volumePer ? 1 : -1
+    );
 
     return localStockArray;
   }

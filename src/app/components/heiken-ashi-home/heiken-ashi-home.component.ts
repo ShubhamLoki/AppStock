@@ -11,8 +11,10 @@ export class HeikenAshiHomeComponent implements OnInit {
 
   showAllStockList = true;
   showTodayAbove55StockList = false;
+  showYesAbove55StockList = false;
   showNear55StockList = false;
   showStockHistory = false;
+  showAllAbove55 = false;
 
   historyStock = '';
 
@@ -34,25 +36,36 @@ export class HeikenAshiHomeComponent implements OnInit {
       });
   }
 
-  public openGoingAbove55(): void {
-    this.analysisList = this.heikenAshiService.getAbove55();
+  public openGoingAbove55(dayCount): void {
+    this.analysisList = this.heikenAshiService.getAbove55(dayCount);
     this.showAllStockList = false;
-    this.showTodayAbove55StockList = true;
     this.showNear55StockList = false;
     this.showStockHistory = false;
+    this.showAllAbove55 = false;
+    if (dayCount === 0) {
+      this.showTodayAbove55StockList = true;
+      this.showYesAbove55StockList = false;
+    } else {
+      this.showYesAbove55StockList = true;
+      this.showTodayAbove55StockList = false;
+    }
   }
   public openAll(): void {
     this.showAllStockList = true;
     this.showTodayAbove55StockList = false;
+    this.showYesAbove55StockList = false;
     this.showNear55StockList = false;
     this.showStockHistory = false;
+    this.showAllAbove55 = false;
   }
   public openNear55(): void {
     this.analysisList = this.heikenAshiService.getNear55();
     this.showAllStockList = false;
     this.showTodayAbove55StockList = false;
+    this.showYesAbove55StockList = false;
     this.showNear55StockList = true;
     this.showStockHistory = false;
+    this.showAllAbove55 = false;
   }
 
   public openHistory(stockName): void {
@@ -60,6 +73,18 @@ export class HeikenAshiHomeComponent implements OnInit {
     this.showStockHistory = true;
     this.showAllStockList = false;
     this.showTodayAbove55StockList = false;
+    this.showYesAbove55StockList = false;
     this.showNear55StockList = false;
+    this.showAllAbove55 = false;
+  }
+
+  openAllAbove55(): void {
+    this.analysisList = this.heikenAshiService.getAllAbove55();
+    this.showStockHistory = false;
+    this.showAllStockList = false;
+    this.showTodayAbove55StockList = false;
+    this.showYesAbove55StockList = false;
+    this.showNear55StockList = false;
+    this.showAllAbove55 = true;
   }
 }

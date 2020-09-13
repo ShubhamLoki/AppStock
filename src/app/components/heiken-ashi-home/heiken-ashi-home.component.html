@@ -15,9 +15,16 @@
         <button
           class="btn btn-light"
           [ngClass]="{ active: showTodayAbove55StockList }"
-          (click)="openGoingAbove55()"
+          (click)="openGoingAbove55(0)"
         >
           Today Above 55
+        </button>
+        <button
+          class="btn btn-light"
+          [ngClass]="{ active: showYesAbove55StockList }"
+          (click)="openGoingAbove55(1)"
+        >
+          Yesterday Above 55
         </button>
         <button
           class="btn btn-light"
@@ -25,6 +32,13 @@
           (click)="openNear55()"
         >
           Near 55
+        </button>
+        <button
+          class="btn btn-light"
+          [ngClass]="{ active: showAllAbove55 }"
+          (click)="openAllAbove55()"
+        >
+          All Above 55
         </button>
       </div>
       <div class="col-9">
@@ -41,6 +55,7 @@
                 <td>Stock Name</td>
                 <td>Time IST</td>
                 <td>RSI</td>
+                <td class="text-right">Day Change</td>
                 <td>History</td>
               </tr>
             </thead>
@@ -56,6 +71,7 @@
                 <td [ngClass]="{ 'text-success': stock.rsi >= 55 }">
                   {{ stock.rsi }}
                 </td>
+                <td class="text-right">{{ stock.dayChangePer }} %</td>
                 <td>
                   <button
                     class="btn btn-sm btn-link"
@@ -68,11 +84,22 @@
             </tbody>
           </table>
         </div>
-        <div *ngIf="showTodayAbove55StockList">
+        <div
+          *ngIf="
+            showTodayAbove55StockList ||
+            showYesAbove55StockList ||
+            showAllAbove55
+          "
+        >
           <app-analysis-data
             [localStockArray]="analysisList"
           ></app-analysis-data>
         </div>
+        <!-- <div *ngIf="showYesAbove55StockList">
+          <app-analysis-data
+            [localStockArray]="analysisList"
+          ></app-analysis-data>
+        </div> -->
         <div *ngIf="showStockHistory">
           <div class="d-flex flex-row bg-light-gray">
             <h4>History Of RSI For -</h4>
