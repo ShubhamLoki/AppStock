@@ -1,3 +1,4 @@
+import { CommonService } from './common.service';
 import { STOCK_LIST } from './../constants/app.constants';
 import { STOCK_LIST_HEIKIN } from './../constants/stock-list.constants';
 import { Injectable } from '@angular/core';
@@ -61,8 +62,9 @@ export class HeikenAshiService {
             const lastClose = listData.close[timeIndex - 1];
             stockData.dayChangePer =
               ((stockData.close - lastClose) * 100) / lastClose;
-            stockData.dayChangePer =
-              Math.round(stockData.dayChangePer * 100) / 100;
+            stockData.dayChangePer = CommonService.truncNumber(
+              stockData.dayChangePer
+            );
           }
           stockDataHA.stockName = stockName;
           stockDataHA.timeStamp = timeStamp;
@@ -269,17 +271,17 @@ export class HeikenAshiService {
     const localStockArray: any[] = [];
     this.StocksQuoteArrayMap.forEach((qouteArray: StockData[], stockName) => {
       const lastIdex = qouteArray.length - 1;
-      const lastStockData: StockData = qouteArray[lastIdex];
+      let lastStockData: StockData = qouteArray[lastIdex];
       const secLastStockData: StockData = qouteArray[lastIdex - 1];
       if (
         lastStockData.rsi >= 50 &&
         lastStockData.rsi <= 55 &&
         secLastStockData.rsi <= lastStockData.rsi
       ) {
-        const volumePer =
-          ((lastStockData.volume - secLastStockData.volume) * 100) /
-          secLastStockData.volume;
-        lastStockData.volumePer = Math.round(volumePer * 100) / 100;
+        lastStockData = this.calculateVolumePers(
+          lastStockData,
+          secLastStockData
+        );
         localStockArray.push({
           stock: stockName,
           stockObj: lastStockData,
@@ -296,14 +298,17 @@ export class HeikenAshiService {
     const localStockArray: any[] = [];
     this.StocksQuoteArrayMap.forEach((qouteArray: StockData[], stockName) => {
       if (qouteArray.length > dayCount + 1) {
-        const lastIdex = qouteArray.length - 1 - dayCount;
-        const lastStockData: StockData = qouteArray[lastIdex];
+        const lastIdexOnDay = qouteArray.length - 1 - dayCount;
+        const lastIdex = qouteArray.length - 1;
+        const lastStockDataOnDay: StockData = qouteArray[lastIdexOnDay];
+        let lastStockData: StockData = qouteArray[lastIdex];
+        const secLastStockDataOnDay: StockData = qouteArray[lastIdexOnDay - 1];
         const secLastStockData: StockData = qouteArray[lastIdex - 1];
-        if (lastStockData.rsi >= 55 && secLastStockData.rsi <= 55) {
-          const volumePer =
-            ((lastStockData.volume - secLastStockData.volume) * 100) /
-            secLastStockData.volume;
-          lastStockData.volumePer = Math.round(volumePer * 100) / 100;
+        if (lastStockDataOnDay.rsi >= 55 && secLastStockDataOnDay.rsi <= 55) {
+          lastStockData = this.calculateVolumePers(
+            lastStockData,
+            secLastStockData
+          );
           localStockArray.push({
             stock: stockName,
             stockObj: lastStockData,
@@ -323,13 +328,13 @@ export class HeikenAshiService {
     this.StocksQuoteArrayMap.forEach((qouteArray: StockData[], stockName) => {
       if (qouteArray.length > 2) {
         const lastIdex = qouteArray.length - 1;
-        const lastStockData: StockData = qouteArray[lastIdex];
+        let lastStockData: StockData = qouteArray[lastIdex];
         const secLastStockData: StockData = qouteArray[lastIdex - 1];
         if (lastStockData.rsi >= 55) {
-          const volumePer =
-            ((lastStockData.volume - secLastStockData.volume) * 100) /
-            secLastStockData.volume;
-          lastStockData.volumePer = Math.round(volumePer * 100) / 100;
+          lastStockData = this.calculateVolumePers(
+            lastStockData,
+            secLastStockData
+          );
           localStockArray.push({
             stock: stockName,
             stockObj: lastStockData,
@@ -342,5 +347,42 @@ export class HeikenAshiService {
     );
 
     return localStockArray;
+  }
+
+  public getAllBelow35(): any[] {
+    const localStockArray: any[] = [];
+    this.StocksQuoteArrayMap.forEach((qouteArray: StockData[], stockName) => {
+      if (qouteArray.length > 2) {
+        const lastIdex = qouteArray.length - 1;
+        let lastStockData: StockData = qouteArray[lastIdex];
+        const secLastStockData: StockData = qouteArray[lastIdex - 1];
+        if (lastStockData.rsi <= 35) {
+          lastStockData = this.calculateVolumePers(
+            lastStockData,
+            secLastStockData
+          );
+          localStockArray.push({
+            stock: stockName,
+            stockObj: lastStockData,
+          });
+        }
+      }
+    });
+    localStockArray.sort((a, b) =>
+      a.stockObj.volumePer < b.stockObj.volumePer ? 1 : -1
+    );
+
+    return localStockArray;
+  }
+
+  private calculateVolumePers(
+    lastStockData: StockData,
+    secLastStockData: StockData
+  ): any {
+    const volumePer =
+      ((lastStockData.volume - secLastStockData.volume) * 100) /
+      secLastStockData.volume;
+    lastStockData.volumePer = CommonService.truncNumber(volumePer);
+    return lastStockData;
   }
 }

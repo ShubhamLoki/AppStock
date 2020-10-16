@@ -1,0 +1,189 @@
+<!-- <p>option-chain-home works!</p> -->
+<div class="d-flex flex-column align-content-center">
+  <div class="d-flex flex-row">
+    <h4>
+      Nifty : {{ underlyingValue }}, PCR : {{ pcRatio }}, Last Update :
+      {{ lastUpdatedAt | date: "short" }}
+    </h4>
+  </div>
+  <div class="d-flex flex-row">
+    <table class="table">
+      <thead class="bg-light">
+        <tr>
+          <td>TYPE</td>
+          <td>Strike Price</td>
+          <td>Open Interest</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stock of stockOIList; let i = index">
+          <td>{{ stock.type }}</td>
+          <td>{{ stock.strikePrice }}</td>
+          <td>{{ stock.openInterest }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex flex-row" *ngIf="chartCEReady">
+    <div class="d-flex flex-column col-6">
+      <div class="d-flex flex-row">
+        <h3>CE</h3>
+        <mat-form-field appearance="fill">
+          <mat-label>Strike Price</mat-label>
+          <mat-select
+            [(value)]="selectedCE"
+            (selectionChange)="dropDownChangedCE($event)"
+          >
+            <mat-option *ngFor="let strike of strikes" [value]="strike.value">
+              {{ strike.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="d-flex flex-row">
+        <div style="width: 600px">
+          <canvas
+            mdbChart
+            [chartType]="chartType"
+            [datasets]="chartCEDatasets1"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="true"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"
+          >
+          </canvas>
+        </div>
+      </div>
+      <div class="d-flex flex-row">
+        <div style="width: 600px">
+          <canvas
+            mdbChart
+            [chartType]="chartType"
+            [datasets]="chartCEDatasets2"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="true"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"
+          >
+          </canvas>
+        </div>
+      </div>
+       <div class="d-flex flex-row">
+        <div style="width: 600px">
+          <canvas
+            mdbChart
+            [chartType]="chartType"
+            [datasets]="chartCEDatasets3"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="true"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"
+          >
+          </canvas>
+        </div>
+      </div>
+      <div class="d-flex flex-row">
+        <div style="width: 600px">
+          <canvas
+            mdbChart
+            [chartType]="chartType"
+            [datasets]="chartCEDatasets4"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="true"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"
+          >
+          </canvas>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-column col-6" *ngIf="chartPEReady">
+      <div class="d-flex flex-row">
+        <h3>PE</h3>
+        <mat-form-field appearance="fill">
+          <mat-label>Strike Price</mat-label>
+          <mat-select
+            [(value)]="selectedPE"
+            (selectionChange)="dropDownChangedPE($event)"
+          >
+            <mat-option *ngFor="let strike of strikes" [value]="strike.value">
+              {{ strike.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="d-flex flex-row">
+        <div style="width: 600px">
+          <canvas
+            mdbChart
+            [chartType]="chartType"
+            [datasets]="chartPEDatasets1"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="true"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"
+          >
+          </canvas>
+        </div>
+      </div>
+      <div class="d-flex flex-row">
+        <div style="width: 600px">
+          <canvas
+            mdbChart
+            [chartType]="chartType"
+            [datasets]="chartPEDatasets2"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="true"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"
+          >
+          </canvas>
+        </div>
+      </div>
+      <div class="d-flex flex-row">
+        <div style="width: 600px">
+          <canvas
+            mdbChart
+            [chartType]="chartType"
+            [datasets]="chartPEDatasets3"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="true"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"
+          >
+          </canvas>
+        </div>
+      </div>
+      <div class="d-flex flex-row">
+        <div style="width: 600px">
+          <canvas
+            mdbChart
+            [chartType]="chartType"
+            [datasets]="chartPEDatasets4"
+            [labels]="chartLabels"
+            [colors]="chartColors"
+            [options]="chartOptions"
+            [legend]="true"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"
+          >
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

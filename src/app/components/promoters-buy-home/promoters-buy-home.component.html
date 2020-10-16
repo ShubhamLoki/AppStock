@@ -9,45 +9,34 @@
         <td>Stock Name</td>
         <td class="text-right">Total Sequrity</td>
         <td class="text-right">Avg Buy Price</td>
-        <td class="text-right">Promoter Holding</td>
+        <!-- <td class="text-right">Promoter Holding</td> -->
         <td>Is Market Sell</td>
-        <td class="text-right">Pledge</td>
-        <td class="text-right">SAST Sale</td>
+        <!-- <td class="text-right">Pledge</td> -->
+        <!-- <td class="text-right">SAST Sale</td> -->
         <td>Recent Buy</td>
-        <td>Buy This</td>
+        <!-- <td>Buy This</td> -->
+        <td>Corp Info</td>
       </tr>
     </thead>
     <tbody>
-      <!-- <tr
-        *ngFor="
-          let promoter of promotersBuyService.stockValueMap | keyvalue;
-          let i = index
-        "
-        [ngClass]="{ 'bg-warning': promoter.value.buyThis }"
-      >
-        <td>{{ promoter.key }}</td>
-        <td>{{ promoter.value.allSeqVal }}</td>
-        <td>{{ promoter.value.stockAvgBuyPrice }}</td>
-        <td>{{ promoter.value.promoterShareholding }}</td>
-        <td>{{ promoter.value.isMarketSell }}</td>
-        <td>{{ promoter.value.pledgePer }}</td>
-        <td>{{ promoter.value.noOfShareSale }}</td>
-        <td>{{ promoter.value.lastBuyDateTime | date: "short" }}</td>
-        <td>{{ promoter.value.buyThis }}</td>
-      </tr> -->
       <tr
         *ngFor="let promoter of localStockArray; let i = index"
-        [ngClass]="{ 'bg-warning': promoter.buyThis }"
+        [ngClass]="{ 'bg-warning': !promoter.isMarketSell }"
       >
         <td>{{ promoter.stockName }}</td>
         <td class="text-right">{{ promoter.allSeqVal | currency: "INR" }}</td>
         <td class="text-right">{{ promoter.stockAvgBuyPrice }}</td>
-        <td class="text-right">{{ promoter.promoterShareholding }} %</td>
+        <!-- <td class="text-right">{{ promoter.promoterShareholding }} %</td> -->
         <td>{{ promoter.isMarketSell }}</td>
-        <td class="text-right">{{ promoter.pledgePer }} %</td>
-        <td class="text-right">{{ promoter.noOfShareSale }}</td>
+        <!-- <td class="text-right">{{ promoter.pledgePer }} %</td> -->
+        <!-- <td class="text-right">{{ promoter.noOfShareSale }}</td> -->
         <td>{{ promoter.lastBuyDateTime | date: "mediumDate" }}</td>
-        <td>{{ promoter.buyThis }}</td>
+        <!-- <td>{{ promoter.buyThis }}</td> -->
+        <td>
+          <button class="btn btn-link" (click)="goToLink(promoter.stockName)">
+            NSE
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>

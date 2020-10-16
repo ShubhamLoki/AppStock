@@ -1,3 +1,5 @@
+import { StockApiService } from './services/stock.api.service';
+import { OptionChainService } from './services/option-chain.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -7,6 +9,8 @@ import { ApiService } from './services/api.service';
 import { StockDivergenceService } from './services/stock.divergence.service';
 import { HeikenAshiService } from './services/heiken-ashi.service';
 import { PromotersBuyService } from './services/promoters-buy.service';
+import { CommonService } from './services/common.service';
+import { StockCalculationService } from './services/stock.calculation.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import { DivergenceHomeComponent } from './components/divergence-home/divergence-home.component';
@@ -17,13 +21,15 @@ import { ROUTES } from 'src/app/configs/routes.config';
 import { WishListComponent } from './components/divergence-home/wish-list/wish-list.component';
 import { HeikenAshiHomeComponent } from './components/heiken-ashi-home/heiken-ashi-home.component';
 import { AppHomeComponent } from './components/app-home/app-home.component';
-import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { ChartsModule, MDBBootstrapModule } from 'angular-bootstrap-md';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AnalysisDataComponent } from './components/heiken-ashi-home/analysis-data/analysis-data.component';
 import { HistoryDataComponent } from './components/heiken-ashi-home/history-data/history-data.component';
 import { PromotersBuyHomeComponent } from './components/promoters-buy-home/promoters-buy-home.component';
+import { OptionChainHomeComponent } from './components/option-chain-home/option-chain-home.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -37,22 +43,29 @@ import { PromotersBuyHomeComponent } from './components/promoters-buy-home/promo
     AnalysisDataComponent,
     HistoryDataComponent,
     PromotersBuyHomeComponent,
+    OptionChainHomeComponent,
   ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ChartsModule,
     MDBBootstrapModule.forRoot(),
     RouterModule.forRoot(ROUTES),
     MatTabsModule,
     NgbModule,
+    MatSelectModule,
   ],
   providers: [
     ApiService,
     StockDivergenceService,
     HeikenAshiService,
     PromotersBuyService,
+    CommonService,
+    StockCalculationService,
+    OptionChainService,
+    StockApiService,
   ],
   bootstrap: [AppComponent],
 })

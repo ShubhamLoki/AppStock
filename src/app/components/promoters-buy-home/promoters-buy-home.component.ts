@@ -37,4 +37,9 @@ export class PromotersBuyHomeComponent implements OnInit {
         this.status = 'Error While Loading';
       });
   }
+
+  goToLink(symbol: string) {
+    const url = `https://www.nseindia.com/get-quotes/equity?symbol=${symbol}`;
+    window.open(url, '_blank');
+  }
 }

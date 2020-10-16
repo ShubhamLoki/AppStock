@@ -1,3 +1,4 @@
+import { CommonService } from './common.service';
 import { Injectable } from '@angular/core';
 import { STOCK_LIST } from '../constants/app.constants';
 import { ApiService } from './api.service';
@@ -244,6 +245,7 @@ export class StockDivergenceService {
                 downMove = Math.abs(move);
               }
             }
+            // CommonService.truncNumber(listData.open[timeIndex]);
             // * SET DATA
             stockData.open = Math.round(listData.open[timeIndex] * 100) / 100;
             stockData.high = Math.round(listData.high[timeIndex] * 100) / 100;

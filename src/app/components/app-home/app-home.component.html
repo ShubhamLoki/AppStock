@@ -3,6 +3,7 @@
   <ul ngbNav #nav="ngbNav" class="nav-tabs">
     <li [ngbNavItem]="1">
       <button
+        *ngIf="true"
         class="btn btn-outline-light m-1"
         (click)="openDivergenceHome()"
         [ngClass]="{ active: showDivergence }"
@@ -29,10 +30,20 @@
         Promoters Buy
       </button>
     </li>
+    <li [ngbNavItem]="2">
+      <button
+        class="btn btn-outline-light m-1"
+        (click)="openOptionChainHome()"
+        [ngClass]="{ active: showOptionChain }"
+      >
+        Option Chain
+      </button>
+    </li>
   </ul>
 </div>
 <div class="d-flex flex-row">
   <app-heiken-ashi-home *ngIf="showHeikinAshi"></app-heiken-ashi-home>
   <app-divergence-home *ngIf="showDivergence"></app-divergence-home>
   <app-promoters-buy-home *ngIf="showPromoters"></app-promoters-buy-home>
+  <app-option-chain-home *ngIf="showOptionChain"></app-option-chain-home>
 </div>

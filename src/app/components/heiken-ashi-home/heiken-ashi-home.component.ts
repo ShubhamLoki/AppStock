@@ -1,3 +1,6 @@
+import { INTERVALS } from './../../constants/app.constants';
+// import { STOCK_LIST } from './../../constants/stocks.constants';
+import { StockCalculationService } from './../../services/stock.calculation.service';
 import { Component, OnInit } from '@angular/core';
 import { HeikenAshiService } from 'src/app/services/heiken-ashi.service';
 
@@ -15,6 +18,7 @@ export class HeikenAshiHomeComponent implements OnInit {
   showNear55StockList = false;
   showStockHistory = false;
   showAllAbove55 = false;
+  showAllBelow35 = false;
 
   historyStock = '';
 
@@ -23,7 +27,10 @@ export class HeikenAshiHomeComponent implements OnInit {
 
   analysisList = [];
 
-  constructor(public heikenAshiService: HeikenAshiService) {}
+  constructor(
+    public heikenAshiService: HeikenAshiService,
+    private stockCalculationService: StockCalculationService
+  ) {}
 
   ngOnInit(): void {
     this.heikenAshiService
@@ -34,6 +41,16 @@ export class HeikenAshiHomeComponent implements OnInit {
       .catch((error) => {
         console.log(error);
       });
+    // this.stockCalculationService
+    //   .calculateRSI(STOCK_LIST.ADANIGREEN, INTERVALS.MO_1)
+    //   .then((quoteArray) => {
+    //     console.log(INTERVALS.MO_1, quoteArray[quoteArray.length - 1]);
+    //   });
+    // this.stockCalculationService
+    //   .calculateRSI(STOCK_LIST.ADANIGREEN, INTERVALS.WK_1)
+    //   .then((quoteArray) => {
+    //     console.log(INTERVALS.WK_1, quoteArray[quoteArray.length - 1]);
+    //   });
   }
 
   public openGoingAbove55(dayCount): void {
@@ -42,6 +59,8 @@ export class HeikenAshiHomeComponent implements OnInit {
     this.showNear55StockList = false;
     this.showStockHistory = false;
     this.showAllAbove55 = false;
+    this.showAllBelow35 = false;
+
     if (dayCount === 0) {
       this.showTodayAbove55StockList = true;
       this.showYesAbove55StockList = false;
@@ -57,6 +76,7 @@ export class HeikenAshiHomeComponent implements OnInit {
     this.showNear55StockList = false;
     this.showStockHistory = false;
     this.showAllAbove55 = false;
+    this.showAllBelow35 = false;
   }
   public openNear55(): void {
     this.analysisList = this.heikenAshiService.getNear55();
@@ -66,6 +86,7 @@ export class HeikenAshiHomeComponent implements OnInit {
     this.showNear55StockList = true;
     this.showStockHistory = false;
     this.showAllAbove55 = false;
+    this.showAllBelow35 = false;
   }
 
   public openHistory(stockName): void {
@@ -76,6 +97,7 @@ export class HeikenAshiHomeComponent implements OnInit {
     this.showYesAbove55StockList = false;
     this.showNear55StockList = false;
     this.showAllAbove55 = false;
+    this.showAllBelow35 = false;
   }
 
   openAllAbove55(): void {
@@ -86,5 +108,16 @@ export class HeikenAshiHomeComponent implements OnInit {
     this.showYesAbove55StockList = false;
     this.showNear55StockList = false;
     this.showAllAbove55 = true;
+    this.showAllBelow35 = false;
+  }
+  openAllBelow35(): void {
+    this.analysisList = this.heikenAshiService.getAllBelow35();
+    this.showStockHistory = false;
+    this.showAllStockList = false;
+    this.showTodayAbove55StockList = false;
+    this.showYesAbove55StockList = false;
+    this.showNear55StockList = false;
+    this.showAllAbove55 = false;
+    this.showAllBelow35 = true;
   }
 }

@@ -394,8 +394,25 @@ export const STOCK_LIST = [
   // new
   'SHILPAMED',
   'RIIL',
+  'IOLCP',
 ];
 
 export const PATHS = {
   HOURLY: 'hourly_divergence',
+};
+
+export const INTERVALS = {
+  M_1: '1m',
+  M_2: '2m',
+  M_5: '5m',
+  M_15: '15m',
+  M_30: '30m',
+  M_60: '60m',
+  M_90: '90m',
+  H_1: '1h',
+  D_1: '1d',
+  D_5: '5d',
+  WK_1: '1wk',
+  MO_1: '1mo',
+  MO_3: '3mo',
 };

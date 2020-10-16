@@ -62,24 +62,28 @@ export class PromotersBuyService {
         });
         this.getAbove1crStocks();
         this.getPromoterAvgBuyPrice();
-        this.getCorpInfoParallel().then(() => {
-          this.stockValueMap.forEach((promoter: Promoter, stockName) => {
-            this.getPromoterShareholdingDetails(stockName, promoter);
-            this.checkSastRegulations(stockName, promoter);
-            if (
-              promoter.pledgePer <= 0 &&
-              promoter.promoterShareholding >= 50 &&
-              promoter.noOfShareSale <= 0 &&
-              promoter.isMarketSell === false
-            ) {
-              promoter.buyThis = true;
-            }
-          });
-          console.log(this.stockValueMap);
-          // console.log(this.insiderTradingDataMap);
-          resolve();
-        });
+        resolve();
       });
+    });
+  }
+
+  private tempFunction(): void {
+    this.getCorpInfoParallel().then(() => {
+      this.stockValueMap.forEach((promoter: Promoter, stockName) => {
+        this.getPromoterShareholdingDetails(stockName, promoter);
+        this.checkSastRegulations(stockName, promoter);
+        if (
+          promoter.pledgePer <= 0 &&
+          promoter.promoterShareholding >= 50 &&
+          promoter.noOfShareSale <= 0 &&
+          promoter.isMarketSell === false
+        ) {
+          promoter.buyThis = true;
+        }
+      });
+      console.log(this.stockValueMap);
+      // console.log(this.insiderTradingDataMap);
+      // resolve();
     });
   }
 
