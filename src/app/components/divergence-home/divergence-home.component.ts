@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StockDivergenceService } from 'src/app/services/stock.divergence.service';
 import { Routes, Router } from '@angular/router';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiService } from 'src/app/services/rest-api/api.service';
 
 @Component({
   selector: 'app-divergence-home',

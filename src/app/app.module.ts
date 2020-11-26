@@ -1,11 +1,12 @@
-import { StockApiService } from './services/stock.api.service';
+import { YahooFinanceApiServiceService } from './services/rest-api/yahoo.finance.api.service';
+import { StockApiService } from './services/rest-api/stock.api.service';
 import { OptionChainService } from './services/option-chain.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ApiService } from './services/api.service';
+import { ApiService } from './services/rest-api/api.service';
 import { StockDivergenceService } from './services/stock.divergence.service';
 import { HeikenAshiService } from './services/heiken-ashi.service';
 import { PromotersBuyService } from './services/promoters-buy.service';
@@ -30,6 +31,9 @@ import { HistoryDataComponent } from './components/heiken-ashi-home/history-data
 import { PromotersBuyHomeComponent } from './components/promoters-buy-home/promoters-buy-home.component';
 import { OptionChainHomeComponent } from './components/option-chain-home/option-chain-home.component';
 import { MatSelectModule } from '@angular/material/select';
+import { OptionAnalysisComponent } from './components/option-chain-home/option-analysis/option-analysis.component';
+import { GraphCanvasComponent } from './components/graph-canvas/graph-canvas.component';
+import { OptionDetailsComponent } from './components/option-chain-home/option-details/option-details.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +48,9 @@ import { MatSelectModule } from '@angular/material/select';
     HistoryDataComponent,
     PromotersBuyHomeComponent,
     OptionChainHomeComponent,
+    OptionAnalysisComponent,
+    GraphCanvasComponent,
+    OptionDetailsComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -66,6 +73,7 @@ import { MatSelectModule } from '@angular/material/select';
     StockCalculationService,
     OptionChainService,
     StockApiService,
+    YahooFinanceApiServiceService,
   ],
   bootstrap: [AppComponent],
 })

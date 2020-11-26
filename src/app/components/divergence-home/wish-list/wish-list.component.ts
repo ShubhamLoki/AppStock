@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { STOCK_LIST } from 'src/app/constants/app.constants';
 import { Router } from '@angular/router';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiService } from 'src/app/services/rest-api/api.service';
 
 @Component({
   selector: 'app-wish-list',

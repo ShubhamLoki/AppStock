@@ -4,7 +4,7 @@ import {
   StockData,
 } from 'src/app/services/stock.divergence.service';
 import { Component, OnInit, Input } from '@angular/core';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiService } from 'src/app/services/rest-api/api.service';
 
 @Component({
   selector: 'app-day-divergence',

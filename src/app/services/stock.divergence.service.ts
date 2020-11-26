@@ -1,7 +1,7 @@
 import { CommonService } from './common.service';
 import { Injectable } from '@angular/core';
 import { STOCK_LIST } from '../constants/app.constants';
-import { ApiService } from './api.service';
+import { ApiService } from './rest-api/api.service';
 import { times } from 'lodash';
 
 @Injectable({

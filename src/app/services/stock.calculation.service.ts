@@ -1,6 +1,6 @@
 import { CommonService } from './common.service';
 import { StockData } from './stock.divergence.service';
-import { ApiService } from './api.service';
+import { ApiService } from './rest-api/api.service';
 import { Injectable } from '@angular/core';
 
 @Injectable({

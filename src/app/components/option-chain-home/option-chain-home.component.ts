@@ -1,5 +1,7 @@
+import { CommonService } from './../../services/common.service';
+import { environment } from './../../../environments/environment';
 import { OptionChainService } from './../../services/option-chain.service';
-import { ApiService } from './../../services/api.service';
+import { ApiService } from '../../services/rest-api/api.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,10 +10,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./option-chain-home.component.scss'],
 })
 export class OptionChainHomeComponent implements OnInit {
-  underlyingValue;
-  pcRatio;
-  lastUpdatedAt;
-  stockOIList;
   strikes = [];
   selectedCE;
   selectedPE;
@@ -25,6 +23,11 @@ export class OptionChainHomeComponent implements OnInit {
   // ----------- Chart Data
   chartCEReady = false;
   chartPEReady = false;
+  chartPDReady = false;
+  showOptionAnalysis = true;
+  showOptionChain = false;
+  showOptionDetails = false;
+  showOptionPD = false;
 
   public chartType: string = 'line';
   public chartCEDatasets1: Array<any> = [];
@@ -35,16 +38,19 @@ export class OptionChainHomeComponent implements OnInit {
   public chartPEDatasets2: Array<any> = [];
   public chartPEDatasets3: Array<any> = [];
   public chartPEDatasets4: Array<any> = [];
+  public chartPCRDatasets: Array<any> = [];
+  public chartPDDatasets: Array<any> = [];
+
   public chartLabels: Array<any> = [];
   public chartColors: Array<any> = [
     {
-      backgroundColor: 'rgba(105, 0, 132, .2)',
-      borderColor: 'rgba(200, 99, 132, .7)',
+      backgroundColor: 'rgba(0, 137, 132, .2)',
+      borderColor: 'rgba(0, 10, 130, .7)',
       borderWidth: 2,
     },
     {
-      backgroundColor: 'rgba(0, 137, 132, .2)',
-      borderColor: 'rgba(0, 10, 130, .7)',
+      backgroundColor: 'rgba(105, 0, 132, .2)',
+      borderColor: 'rgba(200, 99, 132, .7)',
       borderWidth: 2,
     },
   ];
@@ -52,25 +58,46 @@ export class OptionChainHomeComponent implements OnInit {
     responsive: true,
   };
   // -------------------
+  time = new Date();
 
   constructor(
     private apiService: ApiService,
-    private optionChainService: OptionChainService
+    private optionChainService: OptionChainService,
+    private commonService: CommonService
   ) {}
 
   ngOnInit(): void {
     // this.loadOptionChainData();
     // this.loadOptionFeed();
     this.symbol = 'NIFTY';
-    this.strikePriceCE = '11900';
-    this.strikePricePE = '11900';
+    this.strikePriceCE = '12700';
+    this.strikePricePE = '12700';
     this.optionCE = 'CE';
     this.optionPE = 'PE';
-    this.expDate = '15-10-2020';
+    // this.expDate = this.commonService.getExpiryDate();
+    this.expDate = environment.expiryDate;
     this.selectedCE = Number(this.strikePriceCE);
     this.selectedPE = Number(this.strikePricePE);
 
-    this.loadOptionFeed();
+    setInterval(() => {
+      this.time = new Date();
+    }, 1000);
+  }
+
+  private loadStrikePrices(): void {
+    this.optionChainService.getStrikePrice(this.symbol).then((data) => {
+      // console.log(data);
+      data.forEach((strike) => {
+        this.strikes.push({
+          value: strike.strikePrice,
+          viewValue: strike.strikePrice,
+        });
+      });
+    });
+  }
+
+  public refresh(): void {
+    // this.loadOptionFeed();
     this.loadOptionChain(
       this.symbol,
       this.strikePriceCE,
@@ -83,30 +110,7 @@ export class OptionChainHomeComponent implements OnInit {
       this.optionPE,
       this.expDate
     );
-    this.optionChainService.getStrikePrice(this.symbol).then((data) => {
-      console.log(data);
-      data.forEach((strike) => {
-        this.strikes.push({
-          value: strike.strikePrice,
-          viewValue: strike.strikePrice,
-        });
-      });
-    });
-    setInterval(() => {
-      this.loadOptionChain(
-        this.symbol,
-        this.strikePriceCE,
-        this.optionCE,
-        this.expDate
-      );
-      this.loadOptionChain(
-        this.symbol,
-        this.strikePricePE,
-        this.optionPE,
-        this.expDate
-      );
-      this.loadOptionFeed();
-    }, 3 * 60 * 1000); // run on every 3 min
+    // this.loadOptionFeedAll();
   }
 
   private loadOptionChain(
@@ -124,10 +128,10 @@ export class OptionChainHomeComponent implements OnInit {
           this.chartCEDatasets2 = [];
           this.chartCEDatasets3 = [];
           this.chartCEDatasets4 = [];
-          this.chartCEDatasets1.push({
-            data: arrayObj.premiumDecayArray,
-            label: 'Premium Decay',
-          });
+          // this.chartCEDatasets1.push({
+          //   data: arrayObj.premiumDecayArray,
+          //   label: 'Premium Decay',
+          // });
           this.chartCEDatasets2.push({ data: arrayObj.oipArray, label: 'COI' });
           this.chartCEDatasets1.push({ data: arrayObj.ivArray, label: 'IV' });
           this.chartCEDatasets2.push({
@@ -145,10 +149,10 @@ export class OptionChainHomeComponent implements OnInit {
           this.chartPEDatasets2 = [];
           this.chartPEDatasets3 = [];
           this.chartPEDatasets4 = [];
-          this.chartPEDatasets1.push({
-            data: arrayObj.premiumDecayArray,
-            label: 'Premium Decay',
-          });
+          // this.chartPEDatasets1.push({
+          //   data: arrayObj.premiumDecayArray,
+          //   label: 'Premium Decay',
+          // });
           this.chartPEDatasets2.push({ data: arrayObj.oipArray, label: 'COI' });
           this.chartPEDatasets1.push({ data: arrayObj.ivArray, label: 'IV' });
           this.chartPEDatasets2.push({
@@ -166,61 +170,8 @@ export class OptionChainHomeComponent implements OnInit {
       });
   }
 
-  // ! NOT IN USE
-  private loadOptionChainData(): void {
-    this.apiService.getLastData().subscribe((response: any) => {
-      // const data = response.content;
-      const lastDate = response.content[0].creationDateTime.substring(0, 10);
-      console.log(lastDate);
-      this.apiService.getOptionChainData(lastDate).subscribe((data: any) => {
-        // data.sort((a, b) => (a.creationDateTime > b.creationDateTime ? 1 : -1));
-        console.log(data);
-        const ltpArr = [];
-        const preDecyArr = [];
-        const volumeArr = [];
-        const ivArr = [];
-        const oipArr = [];
-        const timeArr = [];
-        if (data) {
-          let premiumDecay = 0;
-          data.forEach((option, index) => {
-            let changeInPrice = 0;
-            if (index > 0) {
-              changeInPrice = option.lastPrice - data[index - 1].lastPrice;
-              premiumDecay =
-                (premiumDecay * (index - 1) + changeInPrice) / index;
-              console.log(premiumDecay, index, changeInPrice);
-            }
-            ltpArr.push(premiumDecay);
-            oipArr.push(option.changeinOpenInterest);
-            ivArr.push(option.impliedVolatility);
-            volumeArr.push(option.totalTradedVolume);
-            // Calculate Premium Decay
-            const timeStr = option.timestamp.substring(12, 17); // 30-Sep-2020 10:28:11
-            timeArr.push(timeStr);
-          });
-        }
-        this.chartLabels = timeArr;
-        this.chartCEDatasets1 = [];
-        this.chartCEDatasets2 = [];
-        this.chartCEDatasets1.push({ data: ltpArr, label: 'Premium Decay' });
-        this.chartCEDatasets2.push({ data: oipArr, label: 'COI' });
-        this.chartCEDatasets1.push({ data: ivArr, label: 'IV' });
-        this.chartCEDatasets2.push({ data: volumeArr, label: 'Volume' });
-        this.chartCEReady = true;
-      });
-    });
-  }
-
-  loadOptionFeed(): void {
-    this.optionChainService.getOptionFeed().then((data: any) => {
-      console.log(data.content[0]);
-      const stockOI = data.content[0];
-      this.underlyingValue = stockOI.underlyingValue;
-      this.pcRatio = stockOI.pcRatio;
-      this.lastUpdatedAt = stockOI.creationDateTime;
-      this.stockOIList = stockOI.stockOIList;
-    });
+  trackByFn(index, stock): string {
+    return stock.id;
   }
 
   public chartClicked(e: any): void {}
@@ -246,34 +197,56 @@ export class OptionChainHomeComponent implements OnInit {
       this.expDate
     );
   }
+
+  showOptionChainDiv(): void {
+    this.showOptionAnalysis = false;
+    this.showOptionChain = true;
+    this.showOptionDetails = false;
+    this.showOptionPD = false;
+
+    this.refresh();
+    this.loadStrikePrices();
+    setInterval(() => {
+      this.refresh();
+    }, 3 * 60 * 1000); // run on every 3 min
+  }
+  showOptionAnalysisDiv(): void {
+    this.showOptionAnalysis = true;
+    this.showOptionChain = false;
+    this.showOptionDetails = false;
+    this.showOptionPD = false;
+  }
+
+  showOptionDetailsComp(): void {
+    this.showOptionAnalysis = false;
+    this.showOptionChain = false;
+    this.showOptionDetails = true;
+    this.showOptionPD = false;
+  }
+
+  showOptionPremiumDecay(): void {
+    this.showOptionAnalysis = false;
+    this.showOptionChain = false;
+    this.showOptionDetails = false;
+    this.showOptionPD = true;
+
+    this.optionChainService.getOptionPremium().then((dataObj) => {
+      console.log(dataObj);
+      this.chartPDDatasets = [];
+      // console.log(dataObj.permiumPEMap.values());
+      // console.log(dataObj.permiumPEMap.keys());
+      this.chartPDDatasets.push({
+        data: [...dataObj.permiumPEMap.values()],
+        label: 'PE',
+      });
+      this.chartPDDatasets.push({
+        data: [...dataObj.permiumCEMap.values()],
+        label: 'CE',
+      });
+      this.chartLabels = [...dataObj.permiumCEMap.keys()];
+      this.chartPDReady = true;
+    });
+  }
 }
 
 // PD = AVG(LTP(Final) - LTP(INIT));
-
-/**
- * askPrice: 262.45
- * askQty: 150
- * bidQty: 75
- * bidprice: 261.55
- * change: 25.899999999999977
- * changeinOpenInterest: 311
- * creationDateTime: "2020-09-30T05:18:13.000+0000"
- * expiryDate: "01-Oct-2020"
- * id: 40783
- * identifier: "OPTIDXNIFTY01-10-2020CE11000.00"
- * impliedVolatility: 0
- * lastPrice: 261.95
- * opIdentifier: "OPTIDXNIFTY01-10-2020CE11000.0030-Sep-2020 10:45:58"
- * openInterest: 7746
- * optionStr: "CE"
- * pChange: 10.972251641601344
- * pchangeInLastPrice: 10.972251641601344
- * pchangeinOpenInterest: 4.182918628110289
- * strikePrice: 11000
- * timestamp: "30-Sep-2020 10:45:58"
- * totalBuyQuantity: 181425
- * totalSellQuantity: 80325
- * totalTradedVolume: 8773
- * underlying: "NIFTY"
- * underlyingValue: 11257.5
- */

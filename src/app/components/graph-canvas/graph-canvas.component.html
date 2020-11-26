@@ -1,0 +1,14 @@
+<div [ngStyle]="{'width': width+'%'}" *ngIf="chartReady">
+  <canvas
+    mdbChart
+    [chartType]="chartType"
+    [datasets]="datasets"
+    [labels]="labels"
+    [colors]="chartColors"
+    [options]="chartOptions"
+    [legend]="true"
+    (chartHover)="chartHovered($event)"
+    (chartClick)="chartClicked($event)"
+  >
+  </canvas>
+</div>

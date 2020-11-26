@@ -1,0 +1,104 @@
+<div class="d-flex flex-column">
+  <div class="d-flex flex-row">
+    <h4>Option Details</h4>
+    <h4 class="ml-auto">{{ lastUpdatedAt | date: "short" }}</h4>
+    <button class="btn btn-outline-info ml-2" (click)="refresh()">
+      Refresh
+    </button>
+  </div>
+  <div class="d-flex flex-row">
+    <div class="col-5 text-center">CALLS</div>
+    <div class="col-2"></div>
+    <div class="col-5 text-center">PUTS</div>
+  </div>
+  <div #viewport>
+    <table class="table text-center font-weight-bold">
+      <thead>
+        <tr>
+          <td>LTP</td>
+          <td>OI</td>
+          <!-- <td>COIVR</td> -->
+          <td>COI</td>
+          <td>Strike Price</td>
+          <td>COI</td>
+          <td>OI</td>
+          <td>LTP</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          [ngClass]="{
+            'bg-colr-blue': getIndex(optionObj.key) == 'PE',
+            'bg-colr-red': getIndex(optionObj.key) == 'CE'
+          }"
+          *ngFor="let optionObj of optionMap | keyvalue"
+        >
+          <td>
+            <span *ngIf="optionObj.value.CE"
+              >{{ optionObj.value.CE.lastPrice }}
+              <span
+                [ngClass]="
+                  getSignalClass(optionObj.value.CE.pchangeInLastPrice)
+                "
+                >({{
+                  optionObj.value.CE.pchangeInLastPrice | number: "1.2-2"
+                }}
+                %)</span
+              >
+            </span>
+          </td>
+          <td [ngClass]="{ 'bg-light': optionObj.key < underlyingValue }">
+            <span *ngIf="optionObj.value.CE">{{
+              optionObj.value.CE.openInterest | number
+            }}</span>
+          </td>
+
+          <td>
+            <span
+              *ngIf="optionObj.value.CE"
+              [ngClass]="
+                getSignalClass(optionObj.value.CE.changeinOpenInterest)
+              "
+            >
+              {{ optionObj.value.CE.changeinOpenInterest | number }}</span
+            >
+          </td>
+
+          <td [ngClass]="{ 'text-primary': getMaxPPIndex(optionObj.key) > -1 }">
+            {{ optionObj.key | number }}
+          </td>
+
+          <td>
+            <span
+              *ngIf="optionObj.value.PE"
+              [ngClass]="
+                getSignalClass(optionObj.value.PE.changeinOpenInterest)
+              "
+              >{{ optionObj.value.PE.changeinOpenInterest | number }}
+            </span>
+          </td>
+
+          <td [ngClass]="{ 'bg-light': optionObj.key > underlyingValue }">
+            <span *ngIf="optionObj.value.PE">
+              {{ optionObj.value.PE.openInterest | number }}</span
+            >
+          </td>
+          <td>
+            <span *ngIf="optionObj.value.PE"
+              >{{ optionObj.value.PE.lastPrice }}
+              <span
+                [ngClass]="
+                  getSignalClass(optionObj.value.PE.pchangeInLastPrice)
+                "
+                >({{
+                  optionObj.value.PE.pchangeInLastPrice | number: "1.2-2"
+                }}
+                %)</span
+              >
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

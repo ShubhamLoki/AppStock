@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
+import { ApiService } from './rest-api/api.service';
 import { times } from 'lodash';
 
 @Injectable({
@@ -63,11 +63,12 @@ export class PromotersBuyService {
         this.getAbove1crStocks();
         this.getPromoterAvgBuyPrice();
         resolve();
+        // this.loadCoropInfo(resolve);
       });
     });
   }
 
-  private tempFunction(): void {
+  private loadCoropInfo(resolve): void {
     this.getCorpInfoParallel().then(() => {
       this.stockValueMap.forEach((promoter: Promoter, stockName) => {
         this.getPromoterShareholdingDetails(stockName, promoter);
@@ -82,8 +83,8 @@ export class PromotersBuyService {
         }
       });
       console.log(this.stockValueMap);
-      // console.log(this.insiderTradingDataMap);
-      // resolve();
+      console.log(this.insiderTradingDataMap);
+      resolve();
     });
   }
 

@@ -2,7 +2,7 @@ import { CommonService } from './common.service';
 import { STOCK_LIST } from './../constants/app.constants';
 import { STOCK_LIST_HEIKIN } from './../constants/stock-list.constants';
 import { Injectable } from '@angular/core';
-import { ApiService } from './api.service';
+import { ApiService } from './rest-api/api.service';
 import { StockData } from './stock.divergence.service';
 import { times } from 'lodash';
 

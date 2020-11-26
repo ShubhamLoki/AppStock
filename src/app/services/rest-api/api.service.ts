@@ -22,14 +22,9 @@ export class ApiService {
     return this.httpClient.get(url);
   }
 
-  public getData() {
-    this.to = Math.floor(Date.now() / 1000);
-    return this.httpClient.get(
-      `${this.baseUrl}/${this.stock}.NS?formatted=true&crumb=w9FEupPhpmK&lang=en-IN&region=IN&interval=${this.timeInterval}&period1=${this.from}&period2=${this.to}&events=div%7Csplit&corsDomain=in.finance.yahoo.com`
-    );
-  }
+  // ! Need Change -------------------
 
-  public getStockData(stockName, timeInterval?) {
+  public getStockData(stockName, timeInterval?): Observable<any> {
     this.to = Math.floor(Date.now() / 1000);
     if (timeInterval != null) {
       this.timeInterval = timeInterval;
@@ -40,14 +35,14 @@ export class ApiService {
     );
   }
 
-  public getStockHistoryData(stockName, timeInterval, from) {
+  public getStockHistoryData(stockName, timeInterval, from): Observable<any> {
     this.to = Math.floor(Date.now() / 1000);
     return this.httpClient.get(
       `${this.baseUrl}/${stockName}.NS?formatted=true&crumb=w9FEupPhpmK&lang=en-IN&region=IN&interval=${timeInterval}&period1=${from}&period2=${this.to}&events=div%7Csplit&corsDomain=in.finance.yahoo.com`
     );
   }
 
-  getInsiderTrading() {
+  getInsiderTrading(): Observable<any> {
     const toDayDate = new Date();
 
     const toDate = toDayDate.getDate();
@@ -69,39 +64,32 @@ export class ApiService {
     console.log(todayDateStr);
     console.log(fromDateStr);
 
-    return this.httpClient.get(
-      `https://www.nseindia.com/api/corporates-pit?index=equities&from_date=${fromDateStr}&to_date=${todayDateStr}`
-    );
+    const backEndUrl =
+      ApiService.BE_BASE_URL +
+      `/stock/promoter/crop-pit?fromDate=${fromDateStr}&toDate=${todayDateStr}`;
+    // `https://www.nseindia.com/api/corporates-pit?index=equities&from_date=${fromDateStr}&to_date=${todayDateStr}`
+    return this.httpClient.get(backEndUrl);
 
     // `https://www.nseindia.com/api/corporates-pit?index=equities&from_date=26-08-2020&to_date=27-08-2020`
   }
 
-  getCorpInfo(stockName) {
+  getCorpInfo(stockName): Observable<any> {
     // ALEMBICLTD
+    const backEndUrl =
+      ApiService.BE_BASE_URL + `/stock/promoter/crop-info?symbol=${stockName}`;
+    // `https://www.nseindia.com/api/quote-equity?symbol=${stockName}&section=corp_info`
+    return this.httpClient.get(backEndUrl);
+  }
+
+  public getOptionFeed(): Observable<any> {
     return this.httpClient.get(
-      `https://www.nseindia.com/api/quote-equity?symbol=${stockName}&section=corp_info`
+      ApiService.BE_BASE_URL + `/optionchain/optionfeed/NIFTY`
     );
   }
 
-  public getOptionChainData(lastDate) {
+  public getOptionFeedAll(): Observable<any> {
     return this.httpClient.get(
-      `http://localhost:9090/optionchain/today/NIFTY?strikePrice=11600&option=CE&from=${lastDate}`
-    );
-  }
-
-  /**
-   * getLastData
-   */
-  public getLastData() {
-    return this.httpClient.get(
-      `http://localhost:9090/optionchain/testnow/NIFTY?strikePrice=11600&option=CE`
-    );
-  }
-
-  public getOptionFeed() {
-    // localhost:9090/optionchain/optionfeed/NIFTY
-    return this.httpClient.get(
-      `http://localhost:9090/optionchain/optionfeed/NIFTY`
+      ApiService.BE_BASE_URL + `/optionchain/optionfeedall/NIFTY`
     );
   }
 }
