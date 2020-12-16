@@ -34,6 +34,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { OptionAnalysisComponent } from './components/option-chain-home/option-analysis/option-analysis.component';
 import { GraphCanvasComponent } from './components/graph-canvas/graph-canvas.component';
 import { OptionDetailsComponent } from './components/option-chain-home/option-details/option-details.component';
+import { OptionsCompareComponent } from './components/option-chain-home/options-compare/options-compare.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { OptionDetailsComponent } from './components/option-chain-home/option-de
     OptionAnalysisComponent,
     GraphCanvasComponent,
     OptionDetailsComponent,
+    OptionsCompareComponent,
   ],
   imports: [
     BrowserAnimationsModule,

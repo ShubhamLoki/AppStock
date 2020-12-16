@@ -1,6 +1,9 @@
 <div class="d-flex flex-column">
   <div class="d-flex flex-row">
     <h4>Option Details</h4>
+    <h4 class="ml-auto mr-2">
+      {{ status }}
+    </h4>
     <h4 class="ml-auto">{{ lastUpdatedAt | date: "short" }}</h4>
     <button class="btn btn-outline-info ml-2" (click)="refresh()">
       Refresh
@@ -31,7 +34,7 @@
             'bg-colr-blue': getIndex(optionObj.key) == 'PE',
             'bg-colr-red': getIndex(optionObj.key) == 'CE'
           }"
-          *ngFor="let optionObj of optionMap | keyvalue"
+          *ngFor="let optionObj of optionMap | keyvalue; trackBy: trackByFn"
         >
           <td>
             <span *ngIf="optionObj.value.CE"
@@ -49,7 +52,7 @@
           </td>
           <td [ngClass]="{ 'bg-light': optionObj.key < underlyingValue }">
             <span *ngIf="optionObj.value.CE">{{
-              optionObj.value.CE.openInterest | number
+              optionObj.value.CE.openInterest * 75 | number
             }}</span>
           </td>
 
@@ -60,12 +63,13 @@
                 getSignalClass(optionObj.value.CE.changeinOpenInterest)
               "
             >
-              {{ optionObj.value.CE.changeinOpenInterest | number }}</span
+              {{ optionObj.value.CE.changeinOpenInterest * 75 | number }}</span
             >
           </td>
 
           <td [ngClass]="{ 'text-primary': getMaxPPIndex(optionObj.key) > -1 }">
             {{ optionObj.key | number }}
+            <i class="fa fa-chart-line"></i>
           </td>
 
           <td>
@@ -74,13 +78,13 @@
               [ngClass]="
                 getSignalClass(optionObj.value.PE.changeinOpenInterest)
               "
-              >{{ optionObj.value.PE.changeinOpenInterest | number }}
+              >{{ optionObj.value.PE.changeinOpenInterest * 75 | number }}
             </span>
           </td>
 
           <td [ngClass]="{ 'bg-light': optionObj.key > underlyingValue }">
             <span *ngIf="optionObj.value.PE">
-              {{ optionObj.value.PE.openInterest | number }}</span
+              {{ optionObj.value.PE.openInterest * 75 | number }}</span
             >
           </td>
           <td>

@@ -14,10 +14,13 @@ export class OptionDetailsComponent implements OnInit {
   pcRatio;
   lastUpdatedAt;
   stockOIList;
+  status = 'Loading...';
+
   constructor(private optionChainService: OptionChainService) {}
 
   ngOnInit(): void {
     console.log('************************');
+    this.optionMap = new Map();
     this.loadOptionFeed();
     setInterval(() => {
       this.refresh();
@@ -36,9 +39,9 @@ export class OptionDetailsComponent implements OnInit {
   }
 
   loadOptionDetails(): void {
-    this.optionMap = new Map();
-    this.optionChainService.getOptionDetails().then((data) => {
+    this.optionChainService.getOptionDetails('NIFTY').then((data) => {
       console.log(data);
+      // this.optionMap = new Map();
       data.forEach((option: Option) => {
         const tempOption = this.optionMap.get(option.strikePrice);
         let tempObj = {
@@ -55,7 +58,8 @@ export class OptionDetailsComponent implements OnInit {
         }
       });
 
-      console.log(this.optionMap);
+      // console.log(this.optionMap);
+      this.status = 'Loaded!';
     });
   }
 
@@ -84,10 +88,15 @@ export class OptionDetailsComponent implements OnInit {
   }
 
   refresh(): void {
+    this.status = 'Loading...';
     this.loadOptionFeed();
   }
 
   public getSignalClass(value): string {
     return value > 0 ? 'text-success' : 'text-danger';
+  }
+
+  trackByFn(index, optionObj): string {
+    return optionObj.key;
   }
 }

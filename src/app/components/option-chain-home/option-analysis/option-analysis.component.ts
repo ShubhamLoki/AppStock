@@ -1,3 +1,4 @@
+import { OptionFeed } from './../../../models/option-feed.model';
 import { CommonService } from './../../../services/common.service';
 import { Option } from './../../../models/option.model';
 import { environment } from './../../../../environments/environment.prod';
@@ -14,32 +15,15 @@ export class OptionAnalysisComponent implements OnInit {
   pcRatio;
   lastUpdatedAt;
   stockOIList;
-  // public chartType: string = 'line';
   chartPCRReady = false;
 
   public chartPCRDatasets: Array<any> = [];
   public chartPCTOIDatasets: Array<any> = [];
+  public chartPCTCOIDatasets: Array<any> = [];
+  public chartCORDatasets: Array<any> = [];
   public chartLabels: Array<any> = [];
-  // public chartColors: Array<any> = [
-  //   {
-  //     backgroundColor: 'rgba(0, 137, 132, .2)',
-  //     borderColor: 'rgba(0, 10, 130, .7)',
-  //     borderWidth: 2,
-  //   },
-  //   {
-  //     backgroundColor: 'rgba(105, 0, 132, .2)',
-  //     borderColor: 'rgba(200, 99, 132, .7)',
-  //     borderWidth: 2,
-  //   },
-  // ];
-  // public chartOptions: any = {
-  //   responsive: true,
-  // };
 
-  constructor(
-    private optionChainService: OptionChainService,
-    private commonService: CommonService
-  ) {}
+  constructor(private optionChainService: OptionChainService) {}
 
   ngOnInit(): void {
     this.refresh();
@@ -61,21 +45,6 @@ export class OptionAnalysisComponent implements OnInit {
       this.pcRatio = stockOI.pcRatio;
       this.lastUpdatedAt = stockOI.creationDateTime;
       this.stockOIList = stockOI.stockOIList;
-      // this.loadPremiumDecay();
-    });
-  }
-  loadPremiumDecay(): void {
-    const symbol = 'NIFTY';
-    const expDate = environment.expiryDate;
-    // const expDate = this.commonService.getExpiryDate();
-    this.stockOIList.forEach((stock) => {
-      if (stock.type !== 'MAXPP') {
-        this.optionChainService
-          .getOptionChain(symbol, stock.strikePrice, stock.type, expDate)
-          .then((arrayObj) => {
-            console.log(arrayObj);
-          });
-      }
     });
   }
 
@@ -88,16 +57,24 @@ export class OptionAnalysisComponent implements OnInit {
       // console.log(data);
       const pcrArray = [];
       const pcrVolArray = [];
+      const corArray = [];
       const totOIPEArray = [];
       const totOICEArray = [];
+      const totCOIPEArray = [];
+      const totCOICEArray = [];
       const timeArr = [];
       this.chartPCRDatasets = [];
       this.chartPCTOIDatasets = [];
-      data.forEach((strike) => {
+      this.chartCORDatasets = [];
+      this.chartPCTCOIDatasets = [];
+      data.forEach((strike: OptionFeed) => {
         pcrArray.push(strike.pcRatio);
         pcrVolArray.push(strike.pcVolRatio);
         totOICEArray.push(strike.totOICE);
         totOIPEArray.push(strike.totOIPE);
+        corArray.push(strike.pcCOIRatio);
+        totCOIPEArray.push(strike.totCOIPE);
+        totCOICEArray.push(strike.totCOICE);
 
         const myDate = new Date(strike.creationDateTime);
         const timeStr = myDate.toLocaleString().substring(11, 17); // 30-Sep-2020 10:28:11
@@ -105,11 +82,16 @@ export class OptionAnalysisComponent implements OnInit {
       });
       // console.log(pcrArray);
 
-      this.chartPCRDatasets.push({ data: pcrArray, label: 'PCR' });
+      this.chartPCRDatasets.push({ data: pcrArray, label: 'TOI PC Ration' });
       // this.chartPCRDatasets.push({ data: pcrVolArray, label: 'PCR Vol' });
 
       this.chartPCTOIDatasets.push({ data: totOIPEArray, label: 'TOI PE' });
       this.chartPCTOIDatasets.push({ data: totOICEArray, label: 'TOI CE' });
+
+      this.chartCORDatasets.push({ data: corArray, label: 'COI PC Diff' });
+
+      this.chartPCTCOIDatasets.push({ data: totCOIPEArray, label: 'TCOI PE' });
+      this.chartPCTCOIDatasets.push({ data: totCOICEArray, label: 'TCOI CE' });
 
       this.chartLabels = timeArr;
       this.chartPCRReady = true;

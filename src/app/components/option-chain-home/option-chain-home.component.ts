@@ -28,8 +28,9 @@ export class OptionChainHomeComponent implements OnInit {
   showOptionChain = false;
   showOptionDetails = false;
   showOptionPD = false;
+  showCOR = false;
 
-  public chartType: string = 'line';
+  // public chartType: string = 'line';
   public chartCEDatasets1: Array<any> = [];
   public chartCEDatasets2: Array<any> = [];
   public chartCEDatasets3: Array<any> = [];
@@ -42,36 +43,32 @@ export class OptionChainHomeComponent implements OnInit {
   public chartPDDatasets: Array<any> = [];
 
   public chartLabels: Array<any> = [];
-  public chartColors: Array<any> = [
-    {
-      backgroundColor: 'rgba(0, 137, 132, .2)',
-      borderColor: 'rgba(0, 10, 130, .7)',
-      borderWidth: 2,
-    },
-    {
-      backgroundColor: 'rgba(105, 0, 132, .2)',
-      borderColor: 'rgba(200, 99, 132, .7)',
-      borderWidth: 2,
-    },
-  ];
-  public chartOptions: any = {
-    responsive: true,
-  };
+  // public chartColors: Array<any> = [
+  //   {
+  //     backgroundColor: 'rgba(0, 137, 132, .2)',
+  //     borderColor: 'rgba(0, 10, 130, .7)',
+  //     borderWidth: 2,
+  //   },
+  //   {
+  //     backgroundColor: 'rgba(105, 0, 132, .2)',
+  //     borderColor: 'rgba(200, 99, 132, .7)',
+  //     borderWidth: 2,
+  //   },
+  // ];
+  // public chartOptions: any = {
+  //   responsive: true,
+  // };
   // -------------------
   time = new Date();
 
-  constructor(
-    private apiService: ApiService,
-    private optionChainService: OptionChainService,
-    private commonService: CommonService
-  ) {}
+  constructor(private optionChainService: OptionChainService) {}
 
   ngOnInit(): void {
     // this.loadOptionChainData();
     // this.loadOptionFeed();
     this.symbol = 'NIFTY';
-    this.strikePriceCE = '12700';
-    this.strikePricePE = '12700';
+    this.strikePriceCE = '13000';
+    this.strikePricePE = '13000';
     this.optionCE = 'CE';
     this.optionPE = 'PE';
     // this.expDate = this.commonService.getExpiryDate();
@@ -82,6 +79,12 @@ export class OptionChainHomeComponent implements OnInit {
     setInterval(() => {
       this.time = new Date();
     }, 1000);
+
+    setInterval(() => {
+      if (this.showOptionPD) {
+        this.loadOptionPremium();
+      }
+    }, 3 * 60 * 1000);
   }
 
   private loadStrikePrices(): void {
@@ -134,10 +137,10 @@ export class OptionChainHomeComponent implements OnInit {
           // });
           this.chartCEDatasets2.push({ data: arrayObj.oipArray, label: 'COI' });
           this.chartCEDatasets1.push({ data: arrayObj.ivArray, label: 'IV' });
-          this.chartCEDatasets2.push({
-            data: arrayObj.volumeArray,
-            label: 'Volume',
-          });
+          // this.chartCEDatasets2.push({
+          //   data: arrayObj.volumeArray,
+          //   label: 'Volume',
+          // });
           this.chartCEDatasets3.push({
             data: arrayObj.coiVolumeRationArray,
             label: 'COI/VOLUME',
@@ -155,10 +158,10 @@ export class OptionChainHomeComponent implements OnInit {
           // });
           this.chartPEDatasets2.push({ data: arrayObj.oipArray, label: 'COI' });
           this.chartPEDatasets1.push({ data: arrayObj.ivArray, label: 'IV' });
-          this.chartPEDatasets2.push({
-            data: arrayObj.volumeArray,
-            label: 'Volume',
-          });
+          // this.chartPEDatasets2.push({
+          //   data: arrayObj.volumeArray,
+          //   label: 'Volume',
+          // });
           this.chartPEDatasets3.push({
             data: arrayObj.coiVolumeRationArray,
             label: 'COI/VOLUME',
@@ -174,8 +177,8 @@ export class OptionChainHomeComponent implements OnInit {
     return stock.id;
   }
 
-  public chartClicked(e: any): void {}
-  public chartHovered(e: any): void {}
+  // public chartClicked(e: any): void {}
+  // public chartHovered(e: any): void {}
 
   public dropDownChangedCE(e: any): void {
     console.log(e);
@@ -203,18 +206,27 @@ export class OptionChainHomeComponent implements OnInit {
     this.showOptionChain = true;
     this.showOptionDetails = false;
     this.showOptionPD = false;
-
-    this.refresh();
-    this.loadStrikePrices();
-    setInterval(() => {
-      this.refresh();
-    }, 3 * 60 * 1000); // run on every 3 min
+    this.showCOR = false;
+    // this.refresh();
+    // this.loadStrikePrices();
+    // setInterval(() => {
+    //   this.refresh();
+    // }, 3 * 60 * 1000); // run on every 3 min
   }
   showOptionAnalysisDiv(): void {
     this.showOptionAnalysis = true;
     this.showOptionChain = false;
     this.showOptionDetails = false;
     this.showOptionPD = false;
+    this.showCOR = false;
+  }
+
+  showCORDiv(): void {
+    this.showOptionAnalysis = false;
+    this.showOptionChain = false;
+    this.showOptionDetails = false;
+    this.showOptionPD = false;
+    this.showCOR = true;
   }
 
   showOptionDetailsComp(): void {
@@ -222,6 +234,7 @@ export class OptionChainHomeComponent implements OnInit {
     this.showOptionChain = false;
     this.showOptionDetails = true;
     this.showOptionPD = false;
+    this.showCOR = false;
   }
 
   showOptionPremiumDecay(): void {
@@ -229,7 +242,12 @@ export class OptionChainHomeComponent implements OnInit {
     this.showOptionChain = false;
     this.showOptionDetails = false;
     this.showOptionPD = true;
+    this.showCOR = false;
 
+    this.loadOptionPremium();
+  }
+
+  private loadOptionPremium(): void {
     this.optionChainService.getOptionPremium().then((dataObj) => {
       console.log(dataObj);
       this.chartPDDatasets = [];

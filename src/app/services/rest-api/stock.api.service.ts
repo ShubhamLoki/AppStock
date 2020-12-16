@@ -61,8 +61,8 @@ export class StockApiService {
    * all strike prices.
    * @returns Observable to subscribe other methods
    */
-  public getOptionDetails(): Observable<any> {
-    const backEndUrl = `${ApiService.BE_BASE_URL}/${StockApiService.SUB_PATH}/option/details`;
+  public getOptionDetails(symbol): Observable<any> {
+    const backEndUrl = `${ApiService.BE_BASE_URL}/${StockApiService.SUB_PATH}/option/details/${symbol}`;
     return this.apiService.getMethod(backEndUrl);
   }
 

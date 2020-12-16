@@ -21,8 +21,8 @@ export class OptionChainService {
       this.stockApiService
         .getOptionChainData(symbole, strikePrice, option, expDate, from)
         .subscribe((data: Option[]) => {
-          console.log(data);
-          const preDecyArr = [];
+          // console.log(data);
+          // const preDecyArr = [];
           const volumeArr = [];
           const ivArr = [];
           const oipArr = [];
@@ -30,21 +30,21 @@ export class OptionChainService {
           const coiVolumeRationArr = [];
           const ltpArr = [];
           if (data) {
-            let premiumDecay = 0;
+            // let premiumDecay = 0;
             data.sort((a, b) =>
               a.creationDateTime > b.creationDateTime ? 1 : -1
             );
             data.forEach((optionObj: Option, index) => {
-              let changeInPrice = 0;
-              if (index > 0) {
-                changeInPrice = optionObj.lastPrice - data[index - 1].lastPrice;
-                premiumDecay =
-                  (premiumDecay * (index - 1) + changeInPrice) / index;
-                // console.log(premiumDecay, index, changeInPrice);
-              }
+              // let changeInPrice = 0;
+              // if (index > 0) {
+              // changeInPrice = optionObj.lastPrice - data[index - 1].lastPrice;
+              // premiumDecay =
+              //   (premiumDecay * (index - 1) + changeInPrice) / index;
+              // console.log(premiumDecay, index, changeInPrice);
+              // }
               ltpArr.push(optionObj.lastPrice);
-              preDecyArr.push(premiumDecay);
-              oipArr.push(optionObj.changeinOpenInterest * 75);
+              // preDecyArr.push(premiumDecay);
+              oipArr.push(optionObj.changeinOpenInterest);
               ivArr.push(optionObj.impliedVolatility);
               volumeArr.push(optionObj.totalTradedVolume);
               coiVolumeRationArr.push(
@@ -58,7 +58,7 @@ export class OptionChainService {
           }
 
           resolve({
-            premiumDecayArray: preDecyArr,
+            // premiumDecayArray: preDecyArr,
             volumeArray: volumeArr,
             ivArray: ivArr,
             oipArray: oipArr,
@@ -109,9 +109,9 @@ export class OptionChainService {
   /**
    * This function call api service to get option details and manipulate the data to display
    */
-  public getOptionDetails(): Promise<any> {
+  public getOptionDetails(symbol): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.stockApiService.getOptionDetails().subscribe((data) => {
+      this.stockApiService.getOptionDetails(symbol).subscribe((data) => {
         if (data) {
           resolve(data);
         } else {

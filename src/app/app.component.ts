@@ -7,6 +7,7 @@ import { ApiService } from './services/rest-api/api.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  title;
   constructor(public apiService: ApiService) {}
 
   ngOnInit() {}

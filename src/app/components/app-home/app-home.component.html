@@ -5,8 +5,8 @@
       <button
         *ngIf="true"
         class="btn btn-outline-light m-1"
-        (click)="openDivergenceHome()"
-        [ngClass]="{ active: showDivergence }"
+        (click)="openModule(DH)"
+        [ngClass]="{ active: activeModule === DH }"
       >
         Divergence
       </button>
@@ -15,8 +15,8 @@
       <button
         *ngIf="true"
         class="btn btn-outline-light m-1"
-        (click)="openHeikinAshiHome()"
-        [ngClass]="{ active: showHeikinAshi }"
+        (click)="openModule(HAH)"
+        [ngClass]="{ active: activeModule === HAH }"
       >
         Heikin Ashi
       </button>
@@ -24,8 +24,8 @@
     <li [ngbNavItem]="2">
       <button
         class="btn btn-outline-light m-1"
-        (click)="openPromotersBuyHome()"
-        [ngClass]="{ active: showPromoters }"
+        (click)="openModule(PBH)"
+        [ngClass]="{ active: activeModule === PBH }"
       >
         Promoters Buy
       </button>
@@ -33,18 +33,19 @@
     <li [ngbNavItem]="2">
       <button
         class="btn btn-outline-light m-1"
-        (click)="openOptionChainHome()"
-        [ngClass]="{ active: showOptionChain }"
+        (click)="openModule(OCH)"
+        [ngClass]="{ active: activeModule === OCH }"
       >
         Option Chain
       </button>
     </li>
   </ul>
-  <h4 class="mt-2 mr-2 ml-auto">V 2.1</h4>
+  <h4 class="mt-2 mr-2 ml-auto">V 2.4</h4>
 </div>
-<div class="d-flex flex-row">
-  <app-heiken-ashi-home *ngIf="showHeikinAshi"></app-heiken-ashi-home>
-  <app-divergence-home *ngIf="showDivergence"></app-divergence-home>
-  <app-promoters-buy-home *ngIf="showPromoters"></app-promoters-buy-home>
-  <app-option-chain-home *ngIf="showOptionChain"></app-option-chain-home>
+
+<div class="d-flex flex-row" [ngSwitch]="activeModule">
+  <app-divergence-home *ngSwitchCase="DH"></app-divergence-home>
+  <app-heiken-ashi-home *ngSwitchCase="HAH"></app-heiken-ashi-home>
+  <app-promoters-buy-home *ngSwitchCase="PBH"></app-promoters-buy-home>
+  <app-option-chain-home *ngSwitchCase="OCH"></app-option-chain-home>
 </div>
