@@ -33,19 +33,39 @@
     <li [ngbNavItem]="2">
       <button
         class="btn btn-outline-light m-1"
-        (click)="openModule(OCH)"
-        [ngClass]="{ active: activeModule === OCH }"
+        (click)="openModule(NOCH)"
+        [ngClass]="{ active: activeModule === NOCH }"
       >
-        Option Chain
+        {{ NIFTY }} - OC
+      </button>
+    </li>
+    <li [ngbNavItem]="2">
+      <button
+        class="btn btn-outline-light m-1"
+        (click)="openModule(BNOCH)"
+        [ngClass]="{ active: activeModule === BNOCH }"
+      >
+        {{ BANKNIFTY }} - OC
       </button>
     </li>
   </ul>
-  <h4 class="mt-2 mr-2 ml-auto">V 2.4</h4>
+  <h4 class="mt-2 mr-2 ml-auto">
+    V {{ version }}
+    <i class="fa fa-user"></i>
+    <!-- <i class="fa fa-book"></i> -->
+  </h4>
 </div>
 
 <div class="d-flex flex-row" [ngSwitch]="activeModule">
   <app-divergence-home *ngSwitchCase="DH"></app-divergence-home>
   <app-heiken-ashi-home *ngSwitchCase="HAH"></app-heiken-ashi-home>
   <app-promoters-buy-home *ngSwitchCase="PBH"></app-promoters-buy-home>
-  <app-option-chain-home *ngSwitchCase="OCH"></app-option-chain-home>
+  <app-option-chain-home
+    [symbol]="NIFTY"
+    *ngSwitchCase="NOCH"
+  ></app-option-chain-home>
+  <app-option-chain-home
+    [symbol]="BANKNIFTY"
+    *ngSwitchCase="BNOCH"
+  ></app-option-chain-home>
 </div>

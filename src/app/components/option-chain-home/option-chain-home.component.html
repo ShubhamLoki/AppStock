@@ -4,32 +4,32 @@
     <button
       *ngIf="true"
       class="btn btn-outline-primary m-1"
-      (click)="showOptionChainDiv()"
-      [ngClass]="{ active: showOptionChain }"
+      (click)="openTab(OCC)"
+      [ngClass]="{ active: activeTab == OCC }"
     >
-      Options
+      Compare
     </button>
     <button
       *ngIf="true"
       class="btn btn-outline-primary m-1"
-      (click)="showOptionAnalysisDiv()"
-      [ngClass]="{ active: showOptionAnalysis }"
+      (click)="openTab(OCA)"
+      [ngClass]="{ active: activeTab == OCA }"
     >
       Analysis
     </button>
     <button
       *ngIf="true"
       class="btn btn-outline-primary m-1"
-      (click)="showOptionDetailsComp()"
-      [ngClass]="{ active: showOptionDetails }"
+      (click)="openTab(OCD)"
+      [ngClass]="{ active: activeTab == OCD }"
     >
       Details
     </button>
     <button
       *ngIf="true"
       class="btn btn-outline-primary m-1"
-      (click)="showOptionPremiumDecay()"
-      [ngClass]="{ active: showOptionPD }"
+      (click)="openTab(OCPD)"
+      [ngClass]="{ active: activeTab == OCPD }"
     >
       Premium Decay
     </button>
@@ -37,18 +37,21 @@
       <h2>{{ time | date: "hh:mm:ss a" }}</h2>
     </div>
   </div>
-
-  <div class="d-flex flex-column" *ngIf="showOptionChain">
-    <app-options-compare></app-options-compare>
-  </div>
-  <div class="d-flex flex-row" *ngIf="showOptionAnalysis">
-    <app-option-analysis></app-option-analysis>
-  </div>
-  <div class="d-flex flex-row" *ngIf="showOptionDetails">
-    <app-option-details></app-option-details>
-  </div>
-  <div class="d-flex flex-row" *ngIf="showOptionPD">
+  <div class="d-flex flex-row w-100" [ngSwitch]="activeTab">
+    <app-options-compare
+      *ngSwitchCase="OCC"
+      [symbol]="symbol"
+    ></app-options-compare>
+    <app-option-analysis
+      *ngSwitchCase="OCA"
+      [symbol]="symbol"
+    ></app-option-analysis>
+    <app-option-details
+      *ngSwitchCase="OCD"
+      [symbol]="symbol"
+    ></app-option-details>
     <app-graph-canvas
+      *ngSwitchCase="OCPD"
       [chartReady]="chartPDReady"
       [labels]="chartLabels"
       [datasets]="chartPDDatasets"

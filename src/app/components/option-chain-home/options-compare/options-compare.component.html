@@ -4,7 +4,13 @@
     <h4 class="ml-auto mr-2">
       {{ status }}
     </h4>
-    <h4>{{ lastUpdatedAt | date: "short" }}</h4>
+    <!-- <h4>{{ lastUpdatedAt | date: "short" }}</h4> -->
+    <h4 class="ml-auto">
+      Auto Refresh : {{ autoRefreshTime | date: "mediumTime" }}
+    </h4>
+    <h4 class="ml-1">
+      , Last Updated : {{ lastUpdatedAt | date: "mediumTime" }}
+    </h4>
     <button class="btn btn-outline-info ml-2" (click)="refresh()">
       Refresh
     </button>

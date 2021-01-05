@@ -1,3 +1,4 @@
+import { NIFTY } from './../constants/common.constants';
 import { environment } from './../../environments/environment.prod';
 import { Option } from './../models/option.model';
 import { StockApiService } from './rest-api/stock.api.service';
@@ -14,6 +15,41 @@ export class OptionChainService {
     private stockApiService: StockApiService
   ) {}
 
+  public getOptionChainBoth(symbole, strikePrice): Promise<any> {
+    return new Promise((resolve, reject) => {
+      // const from = '2020-10-30';
+      const ceCOIList = [];
+      const peCOIList = [];
+      const timeArr = [];
+      this.stockApiService
+        .getOptionChainDataBoth(symbole, strikePrice)
+        .subscribe((data: Option[]) => {
+          console.log(data);
+          const multiply = symbole === NIFTY ? 75 : 25;
+          if (data) {
+            data.sort((a, b) =>
+              a.creationDateTime > b.creationDateTime ? 1 : -1
+            );
+            data.forEach((optionObj: Option, index) => {
+              if (optionObj.optionStr === 'CE') {
+                ceCOIList.push(optionObj.changeinOpenInterest * multiply);
+              } else {
+                peCOIList.push(optionObj.changeinOpenInterest * multiply);
+                const timeStr = optionObj.timestamp.substring(12, 17); // 30-Sep-2020 10:28:11
+                timeArr.push(timeStr);
+              }
+            });
+          }
+
+          resolve({
+            peArray: peCOIList,
+            ceArray: ceCOIList,
+            timeArray: timeArr,
+          });
+        });
+    });
+  }
+
   public getOptionChain(symbole, strikePrice, option, expDate): Promise<any> {
     return new Promise((resolve, reject) => {
       // const from = '2020-10-30';
@@ -21,44 +57,32 @@ export class OptionChainService {
       this.stockApiService
         .getOptionChainData(symbole, strikePrice, option, expDate, from)
         .subscribe((data: Option[]) => {
-          // console.log(data);
-          // const preDecyArr = [];
           const volumeArr = [];
           const ivArr = [];
           const oipArr = [];
           const timeArr = [];
           const coiVolumeRationArr = [];
           const ltpArr = [];
+          const multiply = symbole === NIFTY ? 75 : 25;
           if (data) {
-            // let premiumDecay = 0;
             data.sort((a, b) =>
               a.creationDateTime > b.creationDateTime ? 1 : -1
             );
             data.forEach((optionObj: Option, index) => {
-              // let changeInPrice = 0;
-              // if (index > 0) {
-              // changeInPrice = optionObj.lastPrice - data[index - 1].lastPrice;
-              // premiumDecay =
-              //   (premiumDecay * (index - 1) + changeInPrice) / index;
-              // console.log(premiumDecay, index, changeInPrice);
-              // }
               ltpArr.push(optionObj.lastPrice);
-              // preDecyArr.push(premiumDecay);
-              oipArr.push(optionObj.changeinOpenInterest);
+              oipArr.push(optionObj.changeinOpenInterest * multiply);
               ivArr.push(optionObj.impliedVolatility);
               volumeArr.push(optionObj.totalTradedVolume);
               coiVolumeRationArr.push(
-                (optionObj.changeinOpenInterest * 75) /
+                (optionObj.changeinOpenInterest * multiply) /
                   optionObj.totalTradedVolume
               );
-              // Calculate Premium Decay
               const timeStr = optionObj.timestamp.substring(12, 17); // 30-Sep-2020 10:28:11
               timeArr.push(timeStr);
             });
           }
 
           resolve({
-            // premiumDecayArray: preDecyArr,
             volumeArray: volumeArr,
             ivArray: ivArr,
             oipArray: oipArr,
@@ -70,9 +94,9 @@ export class OptionChainService {
     });
   }
 
-  public getOptionFeed(): Promise<any> {
+  public getOptionFeed(symbol): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.apiService.getOptionFeed().subscribe((data: Option[]) => {
+      this.stockApiService.getOptionFeed(symbol).subscribe((data: Option[]) => {
         if (data) {
           resolve(data);
         } else {
@@ -82,9 +106,9 @@ export class OptionChainService {
     });
   }
 
-  public getOptionFeedAll(): Promise<any> {
+  public getOptionFeedAll(symbol): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.apiService.getOptionFeedAll().subscribe((data: any) => {
+      this.stockApiService.getOptionFeedAll(symbol).subscribe((data: any) => {
         if (data) {
           resolve(data);
         } else {
@@ -125,10 +149,10 @@ export class OptionChainService {
    * This function call api service to get option data for 3 highest strike open interest call side
    * put side
    */
-  public getOptionPremium(): Promise<any> {
+  public getOptionPremium(symbol): Promise<any> {
     return new Promise((resolve, reject) => {
       this.stockApiService
-        .getOptionPremium('NIFTY', environment.expiryDate)
+        .getOptionPremium(symbol, environment.expiryDate)
         .subscribe((data) => {
           const permiumCEMap = new Map<string, any>();
           const permiumPEMap = new Map<string, any>();

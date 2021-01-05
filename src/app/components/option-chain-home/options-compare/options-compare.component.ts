@@ -1,13 +1,13 @@
 import { environment } from './../../../../environments/environment.prod';
 import { OptionChainService } from './../../../services/option-chain.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-options-compare',
   templateUrl: './options-compare.component.html',
   styleUrls: ['./options-compare.component.scss'],
 })
-export class OptionsCompareComponent implements OnInit {
+export class OptionsCompareComponent implements OnInit, OnDestroy {
   strikes = [];
   selectedCE;
   selectedPE;
@@ -15,7 +15,8 @@ export class OptionsCompareComponent implements OnInit {
   chartCEReady = false;
   chartPEReady = false;
   lastUpdatedAt;
-  symbol = 'NIFTY';
+  autoRefreshTime;
+  @Input() symbol;
   strikePriceCE = '13100';
   strikePricePE = '13100';
   optionCE = 'CE';
@@ -33,18 +34,27 @@ export class OptionsCompareComponent implements OnInit {
   public chartPEDatasets4: Array<any> = [];
   public chartLabels: Array<any> = [];
 
+  timeInterval;
+
   constructor(private optionChainService: OptionChainService) {}
 
   ngOnInit(): void {
     console.log('=======================');
+    this.autoRefreshTime = new Date();
 
     this.expDate = environment.expiryDate;
     this.loadStrikePrices();
     this.loadOptionFeed();
-    setInterval(() => {
+    this.timeInterval = setInterval(() => {
+      this.autoRefreshTime = new Date();
       this.refresh();
     }, 3 * 60 * 1000);
   }
+
+  ngOnDestroy() {
+    clearInterval(this.timeInterval);
+  }
+
   private loadOptionChain(
     symbol: string,
     strikePrice: string,
@@ -143,7 +153,7 @@ export class OptionsCompareComponent implements OnInit {
   }
 
   loadOptionFeed(): void {
-    this.optionChainService.getOptionFeed().then((data: any) => {
+    this.optionChainService.getOptionFeed(this.symbol).then((data: any) => {
       const stockOI = data.content[0];
       this.lastUpdatedAt = stockOI.creationDateTime;
       const stock = stockOI.stockOIList[stockOI.stockOIList.length - 1]; // Get MAXPP Strike Price to load init

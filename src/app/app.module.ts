@@ -1,3 +1,4 @@
+import { DialogService } from './services/dialog.service';
 import { YahooFinanceApiServiceService } from './services/rest-api/yahoo.finance.api.service';
 import { StockApiService } from './services/rest-api/stock.api.service';
 import { OptionChainService } from './services/option-chain.service';
@@ -35,6 +36,7 @@ import { OptionAnalysisComponent } from './components/option-chain-home/option-a
 import { GraphCanvasComponent } from './components/graph-canvas/graph-canvas.component';
 import { OptionDetailsComponent } from './components/option-chain-home/option-details/option-details.component';
 import { OptionsCompareComponent } from './components/option-chain-home/options-compare/options-compare.component';
+import { OptionsCoiGraphComponent } from './components/option-chain-home/option-details/options-coi-graph/options-coi-graph.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +55,7 @@ import { OptionsCompareComponent } from './components/option-chain-home/options-
     GraphCanvasComponent,
     OptionDetailsComponent,
     OptionsCompareComponent,
+    OptionsCoiGraphComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -76,6 +79,7 @@ import { OptionsCompareComponent } from './components/option-chain-home/options-
     OptionChainService,
     StockApiService,
     YahooFinanceApiServiceService,
+    DialogService,
   ],
   bootstrap: [AppComponent],
 })

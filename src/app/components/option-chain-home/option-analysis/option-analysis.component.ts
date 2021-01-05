@@ -3,17 +3,20 @@ import { CommonService } from './../../../services/common.service';
 import { Option } from './../../../models/option.model';
 import { environment } from './../../../../environments/environment.prod';
 import { OptionChainService } from './../../../services/option-chain.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-option-analysis',
   templateUrl: './option-analysis.component.html',
   styleUrls: ['./option-analysis.component.scss'],
 })
-export class OptionAnalysisComponent implements OnInit {
+export class OptionAnalysisComponent implements OnInit, OnDestroy {
+  @Input() symbol;
+
   underlyingValue;
   pcRatio;
   lastUpdatedAt;
+  autoRefreshTime;
   stockOIList;
   chartPCRReady = false;
 
@@ -22,14 +25,21 @@ export class OptionAnalysisComponent implements OnInit {
   public chartPCTCOIDatasets: Array<any> = [];
   public chartCORDatasets: Array<any> = [];
   public chartLabels: Array<any> = [];
+  timeInterval;
 
   constructor(private optionChainService: OptionChainService) {}
 
   ngOnInit(): void {
+    this.autoRefreshTime = new Date();
     this.refresh();
-    setInterval(() => {
+    this.timeInterval = setInterval(() => {
+      this.autoRefreshTime = new Date();
       this.refresh();
     }, 3 * 60 * 1000); // run on every 3 min
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timeInterval);
   }
 
   refresh(): void {
@@ -38,7 +48,7 @@ export class OptionAnalysisComponent implements OnInit {
   }
 
   loadOptionFeed(): void {
-    this.optionChainService.getOptionFeed().then((data: any) => {
+    this.optionChainService.getOptionFeed(this.symbol).then((data: any) => {
       // console.log(data.content[0]);
       const stockOI = data.content[0];
       this.underlyingValue = stockOI.underlyingValue;
@@ -53,8 +63,7 @@ export class OptionAnalysisComponent implements OnInit {
   }
 
   private loadOptionFeedAll(): void {
-    this.optionChainService.getOptionFeedAll().then((data: any) => {
-      // console.log(data);
+    this.optionChainService.getOptionFeedAll(this.symbol).then((data: any) => {
       const pcrArray = [];
       const pcrVolArray = [];
       const corArray = [];
@@ -77,10 +86,9 @@ export class OptionAnalysisComponent implements OnInit {
         totCOICEArray.push(strike.totCOICE);
 
         const myDate = new Date(strike.creationDateTime);
-        const timeStr = myDate.toLocaleString().substring(11, 17); // 30-Sep-2020 10:28:11
+        const timeStr = myDate.toLocaleString().substring(10, 17); // 30-Sep-2020 10:28:11
         timeArr.push(timeStr);
       });
-      // console.log(pcrArray);
 
       this.chartPCRDatasets.push({ data: pcrArray, label: 'TOI PC Ration' });
       // this.chartPCRDatasets.push({ data: pcrVolArray, label: 'PCR Vol' });
@@ -98,6 +106,13 @@ export class OptionAnalysisComponent implements OnInit {
     });
   }
 
-  // public chartClicked(e: any): void {}
-  // public chartHovered(e: any): void {}
+  reset() {
+    this.autoRefreshTime = new Date();
+    clearInterval(this.timeInterval);
+    this.refresh();
+    this.timeInterval = setInterval(() => {
+      this.autoRefreshTime = new Date();
+      this.refresh();
+    }, 3 * 60 * 1000);
+  }
 }

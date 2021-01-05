@@ -81,12 +81,14 @@ export class ApiService {
     return this.httpClient.get(backEndUrl);
   }
 
+  //! NOT IN USE
   public getOptionFeed(): Observable<any> {
     return this.httpClient.get(
       ApiService.BE_BASE_URL + `/optionchain/optionfeed/NIFTY`
     );
   }
 
+  //! NOT IN USE
   public getOptionFeedAll(): Observable<any> {
     return this.httpClient.get(
       ApiService.BE_BASE_URL + `/optionchain/optionfeedall/NIFTY`

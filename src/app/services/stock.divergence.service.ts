@@ -410,7 +410,7 @@ export class StockDivergenceService {
           if (fetched.length === this.stockArray.length) {
             console.log('****************************');
             // this.divergenceMap = fetched;
-            resolve();
+            resolve('');
           } else {
             fetchStockFn();
           }

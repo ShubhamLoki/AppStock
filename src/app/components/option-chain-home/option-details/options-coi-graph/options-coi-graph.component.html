@@ -1,0 +1,29 @@
+<div class="d-flex flex-column">
+  <div class="d-flex flex-row justify-content-center">
+    <h4 class="font-weight-bold mr-2">{{ symbol }}</h4>
+    -
+    <h4 class="font-weight-bold ml-2">{{ strikePrice }}</h4>
+  </div>
+  <div class="d-flex flex-row justify-content-center">
+    <div class="d-flex flex-column mr-2">
+      <span>CE-OI</span>
+      <span>{{ optionObj.value.CE.openInterest * 75 | number }}</span>
+      <span>{{ optionObj.value.CE.changeinOpenInterest * 75 | number }}</span>
+    </div>
+    <div class="d-flex flex-column ml-2">
+      <span>PE-OI</span>
+      <span>{{ optionObj.value.PE.openInterest * 75 | number }}</span>
+      <span>{{ optionObj.value.PE.changeinOpenInterest * 75 | number }}</span>
+    </div>
+  </div>
+
+  <div class="d-flex flex-row" *ngIf="chartReady">
+    <app-graph-canvas
+      [labels]="chartLabels"
+      [datasets]="chartDatasets"
+    ></app-graph-canvas>
+  </div>
+  <div class="d-flex flex-row m-4 justify-content-center" *ngIf="!chartReady">
+    {{ status }}
+  </div>
+</div>

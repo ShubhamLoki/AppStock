@@ -31,8 +31,15 @@ export class StockApiService {
     expDate,
     from?
   ): Observable<any> {
-    const url = `${ApiService.BE_BASE_URL}/${StockApiService.SUB_PATH}/option-chain/${symbol}
-    ?strikePrice=${strikePrice}&option=${option}&expDate=${expDate}&from=${from}`;
+    const url = `${ApiService.BE_BASE_URL}/${StockApiService.SUB_PATH}/option-chain/${symbol}?strikePrice=${strikePrice}&option=${option}`;
+    return this.apiService.getMethod(url);
+  }
+  // "/option-chain-both/{symbol}"
+  /**
+   * getOptionChainData
+   */
+  public getOptionChainDataBoth(symbol, strikePrice): Observable<any> {
+    const url = `${ApiService.BE_BASE_URL}/${StockApiService.SUB_PATH}/option-chain-both/${symbol}?strikePrice=${strikePrice}`;
     return this.apiService.getMethod(url);
   }
   // "/option-feed/{symbol}"
@@ -43,7 +50,14 @@ export class StockApiService {
     const url = `${ApiService.BE_BASE_URL}/${StockApiService.SUB_PATH}/option-feed/${symbol}`;
     return this.apiService.getMethod(url);
   }
-
+  // "/option-feed-all/{symbol}"
+  /**
+   * getOptionFeed
+   */
+  public getOptionFeedAll(symbol): Observable<any> {
+    const url = `${ApiService.BE_BASE_URL}/${StockApiService.SUB_PATH}/option-feed-all/${symbol}`;
+    return this.apiService.getMethod(url);
+  }
   /**
    *
    * @param stockName : Ex. TCS

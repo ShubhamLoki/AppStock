@@ -1,3 +1,4 @@
+import { NIFTY, BANKNIFTY } from './../../constants/common.constants';
 import { CommonService } from './../../services/common.service';
 import { ApiService } from 'src/app/services/rest-api/api.service';
 import { Component, OnInit } from '@angular/core';
@@ -12,8 +13,13 @@ export class AppHomeComponent implements OnInit {
   HAH = 'HAH';
   DH = 'DH';
   PBH = 'PBH';
-  OCH = 'OCH';
-  activeModule = this.OCH; // Option Chain Tab
+  NOCH = 'NOCH';
+  BNOCH = 'BNOCH';
+  NIFTY = NIFTY;
+  BANKNIFTY = BANKNIFTY;
+  activeModule = this.NOCH; // Option Chain Tab
+
+  version = '2.7';
   constructor(private titleService: Title) {}
 
   ngOnInit(): void {
