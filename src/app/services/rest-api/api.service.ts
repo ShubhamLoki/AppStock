@@ -1,12 +1,15 @@
+// import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  static BE_BASE_URL = 'http://localhost:9090';
+  // static BE_BASE_URL = 'http://localhost:9091';
+  static BE_BASE_URL = environment.backEndBaseUrl;
   crosString = 'http://localhost:8081';
   stock = 'IOC';
   baseUrl = 'https://query2.finance.yahoo.com/v8/finance/chart';

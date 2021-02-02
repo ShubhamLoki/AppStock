@@ -50,6 +50,83 @@ export class OptionChainService {
     });
   }
 
+  public getOptionChainAll(symbole, strikePrice): Promise<any> {
+    return new Promise((resolve, reject) => {
+      // const from = '2020-10-30';
+      const ceCOIList = [];
+      const ceOIList = [];
+      const ceLtpArr = [];
+      const ceIvArr = [];
+      const ceVolumeArr = [];
+      const ceCOIVolumeRationArr = [];
+
+      const peCOIList = [];
+      const peOIList = [];
+      const peLtpArr = [];
+      const peIvArr = [];
+      const peVolumeArr = [];
+      const peCOIVolumeRationArr = [];
+
+      const timeArr = [];
+      this.stockApiService
+        .getOptionChainDataBoth(symbole, strikePrice)
+        .subscribe((data: Option[]) => {
+          console.log(data);
+          const multiply = symbole === NIFTY ? 75 : 25;
+          if (data) {
+            data.sort((a, b) =>
+              a.creationDateTime > b.creationDateTime ? 1 : -1
+            );
+            data.forEach((optionObj: Option, index) => {
+              if (optionObj.optionStr === 'CE') {
+                ceCOIList.push(optionObj.changeinOpenInterest * multiply);
+                ceOIList.push(optionObj.openInterest * multiply);
+                ceLtpArr.push(optionObj.lastPrice);
+                ceIvArr.push(optionObj.impliedVolatility);
+                ceVolumeArr.push(optionObj.totalTradedVolume);
+                // ceCOIVolumeRationArr.push(
+                //   (optionObj.changeinOpenInterest * multiply) /
+                //     optionObj.totalTradedVolume
+                // );
+              } else {
+                peCOIList.push(optionObj.changeinOpenInterest * multiply);
+                peOIList.push(optionObj.openInterest * multiply);
+                peLtpArr.push(optionObj.lastPrice);
+                peIvArr.push(optionObj.impliedVolatility);
+                peVolumeArr.push(optionObj.totalTradedVolume);
+                // peCOIVolumeRationArr.push(
+                //   (optionObj.changeinOpenInterest * multiply) /
+                //     optionObj.totalTradedVolume
+                // );
+                const timeStr = optionObj.timestamp.substring(12, 17); // 30-Sep-2020 10:28:11
+                timeArr.push(timeStr);
+              }
+            });
+          }
+
+          resolve({
+            peArrays: {
+              coiList: peCOIList,
+              oiList: peOIList,
+              ltpArr: peLtpArr,
+              ivArr: peIvArr,
+              volumeArr: peVolumeArr,
+              coiVolumeRationArr: peCOIVolumeRationArr,
+            },
+            ceArrays: {
+              coiList: ceCOIList,
+              oiList: ceOIList,
+              ltpArr: ceLtpArr,
+              ivArr: ceIvArr,
+              volumeArr: ceVolumeArr,
+              coiVolumeRationArr: ceCOIVolumeRationArr,
+            },
+            timeArray: timeArr,
+          });
+        });
+    });
+  }
+
   public getOptionChain(symbole, strikePrice, option, expDate): Promise<any> {
     return new Promise((resolve, reject) => {
       // const from = '2020-10-30';

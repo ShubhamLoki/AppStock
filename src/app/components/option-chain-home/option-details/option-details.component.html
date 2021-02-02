@@ -26,7 +26,7 @@
     <div class="col-5 text-center">PUTS</div>
   </div>
   <div #viewport>
-    <table class="table text-center font-weight-bold">
+    <table class="table text-center">
       <thead>
         <tr>
           <td>LTP</td>
@@ -47,72 +47,120 @@
           }"
           *ngFor="let optionObj of optionMap | keyvalue; trackBy: trackByFn"
         >
-          <td>
-            <span *ngIf="optionObj.value.CE"
-              >{{ optionObj.value.CE.lastPrice }}
-              <span
-                [ngClass]="
-                  getSignalClass(optionObj.value.CE.pchangeInLastPrice)
-                "
-                >({{
-                  optionObj.value.CE.pchangeInLastPrice | number: "1.2-2"
-                }}
-                %)</span
+          <td [ngClass]="{ 'bg-light': optionObj.key < underlyingValue }">
+            <!-- CE LTP -->
+            <span *ngIf="optionObj.value.CE">
+              <a
+                (click)="openChart(optionObj, OPT_STR.LTP)"
+                class="mr-1 pointer font-weight-bold"
+                >{{ optionObj.value.CE.lastPrice }}</a
               >
+              <span
+                [ngClass]="getLtpClass(optionObj.value.CE.pchangeInLastPrice)"
+              >
+                ({{ optionObj.value.CE.pchangeInLastPrice | number: "1.2-2" }}
+                %)
+              </span>
             </span>
           </td>
           <td [ngClass]="{ 'bg-light': optionObj.key < underlyingValue }">
-            <span *ngIf="optionObj.value.CE">{{
-              optionObj.value.CE.openInterest * multiply | number
-            }}</span>
-          </td>
-
-          <td>
+            <!-- CE OI -->
             <span
               *ngIf="optionObj.value.CE"
               [ngClass]="
-                getSignalClass(optionObj.value.CE.changeinOpenInterest)
+                getSignalClass(optionObj.value.CE.openInterest * multiply)
               "
             >
-              {{
-                optionObj.value.CE.changeinOpenInterest * multiply | number
-              }}</span
+              <a
+                (click)="openChart(optionObj, OPT_STR.OI)"
+                class="mr-1 pointer"
+              >
+                {{ optionObj.value.CE.openInterest * multiply | number }}
+              </a>
+            </span>
+          </td>
+
+          <td [ngClass]="{ 'bg-light': optionObj.key < underlyingValue }">
+            <!-- CE COI -->
+            <span
+              *ngIf="optionObj.value.CE"
+              [ngClass]="
+                getSignalClass(
+                  optionObj.value.CE.changeinOpenInterest * multiply
+                )
+              "
             >
+              <a
+                (click)="openChart(optionObj, OPT_STR.COI)"
+                class="mr-1 pointer"
+              >
+                {{
+                  optionObj.value.CE.changeinOpenInterest * multiply | number
+                }}
+              </a>
+            </span>
           </td>
 
           <td [ngClass]="{ 'text-primary': getMaxPPIndex(optionObj.key) > -1 }">
-            {{ optionObj.key | number }}
-            <button
-              class="btn btn-sm btn-outline-info"
-              (click)="openCOIDialog(optionObj)"
+            <!-- CE ST PE -->
+            <span class="font-weight-bold mr-1"
+              ><a (click)="openChart(optionObj, OPT_STR.COI)" class="pointer">{{
+                optionObj.key | number
+              }}</a></span
             >
-              <!-- G -->
+            <!-- <button
+              class="btn btn-sm btn-outline-info"
+              (click)="openChart(optionObj, OPT_STR.COI)"
+            >
               <i class="fa fa-book"></i>
-            </button>
+            </button> -->
           </td>
 
-          <td>
+          <td [ngClass]="{ 'bg-light': optionObj.key > underlyingValue }">
+            <!-- PE COI -->
             <span
               *ngIf="optionObj.value.PE"
               [ngClass]="
-                getSignalClass(optionObj.value.PE.changeinOpenInterest)
+                getSignalClass(
+                  optionObj.value.PE.changeinOpenInterest * multiply
+                )
               "
-              >{{ optionObj.value.PE.changeinOpenInterest * multiply | number }}
+            >
+              <a
+                (click)="openChart(optionObj, OPT_STR.COI)"
+                class="mr-1 pointer"
+                >{{
+                  optionObj.value.PE.changeinOpenInterest * multiply | number
+                }}</a
+              >
             </span>
           </td>
 
           <td [ngClass]="{ 'bg-light': optionObj.key > underlyingValue }">
-            <span *ngIf="optionObj.value.PE">
-              {{ optionObj.value.PE.openInterest * multiply | number }}</span
+            <!-- PE OI -->
+            <span
+              *ngIf="optionObj.value.PE"
+              [ngClass]="
+                getSignalClass(optionObj.value.PE.openInterest * multiply)
+              "
             >
+              <a
+                (click)="openChart(optionObj, OPT_STR.OI)"
+                class="mr-1 pointer"
+                >{{ optionObj.value.PE.openInterest * multiply | number }}</a
+              >
+            </span>
           </td>
-          <td>
+          <td [ngClass]="{ 'bg-light': optionObj.key > underlyingValue }">
+            <!-- PE LTP -->
             <span *ngIf="optionObj.value.PE"
-              >{{ optionObj.value.PE.lastPrice }}
+              ><a
+                (click)="openChart(optionObj, OPT_STR.LTP)"
+                class="mr-1 pointer font-weight-bold"
+                >{{ optionObj.value.PE.lastPrice }}</a
+              >
               <span
-                [ngClass]="
-                  getSignalClass(optionObj.value.PE.pchangeInLastPrice)
-                "
+                [ngClass]="getLtpClass(optionObj.value.PE.pchangeInLastPrice)"
                 >({{
                   optionObj.value.PE.pchangeInLastPrice | number: "1.2-2"
                 }}

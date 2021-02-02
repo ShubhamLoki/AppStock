@@ -37,6 +37,8 @@ import { GraphCanvasComponent } from './components/graph-canvas/graph-canvas.com
 import { OptionDetailsComponent } from './components/option-chain-home/option-details/option-details.component';
 import { OptionsCompareComponent } from './components/option-chain-home/options-compare/options-compare.component';
 import { OptionsCoiGraphComponent } from './components/option-chain-home/option-details/options-coi-graph/options-coi-graph.component';
+import { OptionsGraphComponent } from './components/option-chain-home/option-details/options-graph/options-graph.component';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,7 @@ import { OptionsCoiGraphComponent } from './components/option-chain-home/option-
     OptionDetailsComponent,
     OptionsCompareComponent,
     OptionsCoiGraphComponent,
+    OptionsGraphComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -68,6 +71,7 @@ import { OptionsCoiGraphComponent } from './components/option-chain-home/option-
     MatTabsModule,
     NgbModule,
     MatSelectModule,
+    ClipboardModule,
   ],
   providers: [
     ApiService,

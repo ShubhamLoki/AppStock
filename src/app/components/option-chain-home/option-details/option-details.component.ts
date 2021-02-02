@@ -1,5 +1,6 @@
+import { OptionsGraphComponent } from './options-graph/options-graph.component';
 import { DialogService } from './../../../services/dialog.service';
-import { NIFTY } from './../../../constants/common.constants';
+import { NIFTY, OPT_STR } from './../../../constants/common.constants';
 import { Option } from './../../../models/option.model';
 import { OptionChainService } from './../../../services/option-chain.service';
 import {
@@ -28,6 +29,7 @@ export class OptionDetailsComponent implements OnInit, OnDestroy {
   autoRefreshTime;
   stockOIList;
   status = 'Loading...';
+  OPT_STR = OPT_STR;
 
   multiply = 1;
   timeInterval;
@@ -134,7 +136,18 @@ export class OptionDetailsComponent implements OnInit, OnDestroy {
   }
 
   public getSignalClass(value): string {
-    return value > 0 ? 'text-success' : 'text-danger';
+    let classStr = '';
+    classStr =
+      value > 0
+        ? value > (this.multiply == 75 ? 1000000 : 333000)
+          ? 'text-success font-weight-bold'
+          : 'text-success'
+        : 'text-danger font-weight-bold';
+    return classStr;
+  }
+
+  getLtpClass(value): string {
+    return value > 0 ? 'text-success font-weight-bold' : 'text-danger';
   }
 
   trackByFn(index, optionObj): string {
@@ -142,10 +155,26 @@ export class OptionDetailsComponent implements OnInit, OnDestroy {
   }
 
   openCOIDialog(optionObj) {
+    this.refresh();
     const dialogRef = this.dialogService.open(OptionsCoiGraphComponent);
 
     dialogRef.componentInstance.strikePrice = optionObj.key;
     dialogRef.componentInstance.symbol = this.symbol;
     dialogRef.componentInstance.optionObj = optionObj;
+    dialogRef.componentInstance.multiply = this.multiply;
+  }
+
+  openChart(optionObj, activeTab: string) {
+    this.refresh();
+    const dialogRef = this.dialogService.open(OptionsGraphComponent);
+
+    dialogRef.componentInstance.strikePrice = optionObj.key;
+    dialogRef.componentInstance.symbol = this.symbol;
+    dialogRef.componentInstance.optionObj = optionObj.value;
+    dialogRef.componentInstance.multiply = this.multiply;
+    dialogRef.componentInstance.activeTab = activeTab;
+    dialogRef.componentInstance.underlyingValue = this.underlyingValue;
+    dialogRef.componentInstance.pcRatio = this.pcRatio;
+    dialogRef.componentInstance.strikePrices = [...this.optionMap.keys()];
   }
 }
