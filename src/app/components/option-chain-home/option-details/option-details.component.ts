@@ -164,7 +164,7 @@ export class OptionDetailsComponent implements OnInit, OnDestroy {
     dialogRef.componentInstance.multiply = this.multiply;
   }
 
-  openChart(optionObj, activeTab: string) {
+  openChart(optionObj, activeTab: string, optionStr?: string) {
     this.refresh();
     const dialogRef = this.dialogService.open(OptionsGraphComponent);
 
@@ -176,5 +176,6 @@ export class OptionDetailsComponent implements OnInit, OnDestroy {
     dialogRef.componentInstance.underlyingValue = this.underlyingValue;
     dialogRef.componentInstance.pcRatio = this.pcRatio;
     dialogRef.componentInstance.strikePrices = [...this.optionMap.keys()];
+    dialogRef.componentInstance.activeOption = optionStr;
   }
 }

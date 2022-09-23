@@ -10,6 +10,7 @@ export class OptionsCoiGraphComponent implements OnInit {
   @Input() strikePrice;
   @Input() symbol;
   @Input() optionObj;
+  @Input() multiply;
 
   public chartDatasets: Array<any> = [];
   public chartLabels: Array<any> = [];

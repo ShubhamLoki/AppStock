@@ -22,6 +22,7 @@ export class OptionsGraphComponent implements OnInit {
   @Input() underlyingValue;
   @Input() pcRatio;
   @Input() strikePrices: Array<any>;
+  @Input() activeOption: string;
 
   arrayObj;
   OPT_STR = OPT_STR;
@@ -81,8 +82,16 @@ export class OptionsGraphComponent implements OnInit {
         this.tabLabel = OPT_STR_FULL.OI;
         break;
       case OPT_STR.LTP:
-        this.pushChartData(this.arrayObj.peArrays.ltpArr, PE);
-        this.pushChartData(this.arrayObj.ceArrays.ltpArr, CE);
+        if (this.activeOption == 'CE') {
+          this.pushChartData(this.arrayObj.peArrays.ltpArr, PE, true);
+          this.pushChartData(this.arrayObj.ceArrays.ltpArr, CE);
+        } else if (this.activeOption == 'PE') {
+          this.pushChartData(this.arrayObj.peArrays.ltpArr, PE);
+          this.pushChartData(this.arrayObj.ceArrays.ltpArr, CE, true);
+        } else {
+          this.pushChartData(this.arrayObj.peArrays.ltpArr, PE);
+          this.pushChartData(this.arrayObj.ceArrays.ltpArr, CE);
+        }
         this.tabLabel = OPT_STR_FULL.LTP;
         break;
       case OPT_STR.IV:
@@ -105,10 +114,11 @@ export class OptionsGraphComponent implements OnInit {
     this.status = 'Loaded!';
   }
 
-  private pushChartData(data: [], optionStr: string) {
+  private pushChartData(data: [], optionStr: string, hidden = false) {
     this.chartDatasets.push({
       data: data,
       label: optionStr + ' ' + this.activeTab,
+      hidden: hidden,
     });
   }
 

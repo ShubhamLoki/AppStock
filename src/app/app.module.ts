@@ -39,6 +39,8 @@ import { OptionsCompareComponent } from './components/option-chain-home/options-
 import { OptionsCoiGraphComponent } from './components/option-chain-home/option-details/options-coi-graph/options-coi-graph.component';
 import { OptionsGraphComponent } from './components/option-chain-home/option-details/options-graph/options-graph.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { FormsModule } from '@angular/forms';
+import { UnlessDirective } from './unless.directive';
 
 @NgModule({
   declarations: [
@@ -59,8 +61,10 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     OptionsCompareComponent,
     OptionsCoiGraphComponent,
     OptionsGraphComponent,
+    UnlessDirective,
   ],
   imports: [
+    FormsModule,
     BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,

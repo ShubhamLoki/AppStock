@@ -3,7 +3,7 @@
   <ul ngbNav #nav="ngbNav" class="nav-tabs">
     <li [ngbNavItem]="1">
       <button
-        *ngIf="true"
+        *appUnless="false"
         class="btn btn-outline-light m-1"
         (click)="openModule(DH)"
         [ngClass]="{ active: activeModule === DH }"
@@ -46,6 +46,15 @@
         [ngClass]="{ active: activeModule === BNOCH }"
       >
         {{ BANKNIFTY }} - OC
+      </button>
+    </li>
+    <li [ngbNavItem]="2">
+      <button
+        class="btn btn-outline-light m-1"
+        (click)="openModule(BOS)"
+        [ngClass]="{ active: activeModule === BOS }"
+      >
+        BOS
       </button>
     </li>
   </ul>

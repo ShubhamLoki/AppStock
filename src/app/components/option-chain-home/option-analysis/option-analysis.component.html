@@ -34,7 +34,7 @@
       </tbody>
     </table>
   </div>
-  <div class="d-flex flex-column" *ngIf="chartPCRReady">
+  <div class="d-flex flex-row" *ngIf="chartPCRReady">
     <app-graph-canvas
       [labels]="chartLabels"
       [datasets]="chartPCRDatasets"
@@ -45,7 +45,7 @@
     ></app-graph-canvas>
   </div>
 
-  <div class="d-flex flex-column" *ngIf="chartPCRReady">
+  <div class="d-flex flex-row" *ngIf="chartPCRReady">
     <app-graph-canvas
       [labels]="chartLabels"
       [datasets]="chartPCTOIDatasets"

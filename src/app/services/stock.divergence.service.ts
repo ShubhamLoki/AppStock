@@ -208,15 +208,14 @@ export class StockDivergenceService {
 
   calculateDivergence(stockName, timeInterval): Promise<any> {
     const returnPromise = new Promise((resolve, reject) => {
-      this.apiService
-        .getStockData(stockName, timeInterval)
-        .subscribe((data: any) => {
-          if (!data) {
+      this.apiService.getStockData(stockName, timeInterval).subscribe(
+        (next: any) => {
+          if (!next) {
             reject();
           }
           const quoteArray = [];
           // console.log('************ ', stockName);
-          const result = data.chart.result[0];
+          const result = next.chart.result[0];
           const listData: any = result.indicators.quote[0];
           const timeStampArr: any = result.timestamp;
 
@@ -335,7 +334,16 @@ export class StockDivergenceService {
             // ! END timeStampArr.forEach
           });
           resolve(quoteArray);
-        });
+        },
+        (error) => {
+          console.error('Error occured......... ' + stockName);
+          console.error(error);
+          reject();
+        },
+        () => {
+          console.log('Observer Complete');
+        }
+      );
     });
 
     return returnPromise;
@@ -373,48 +381,55 @@ export class StockDivergenceService {
     return new Promise((resolve, reject) => {
       const fetched: any[] = [];
       let index = 0;
+      let errorIndex = 0;
 
       const fetchPromise = (stockName) =>
         this.calculateDivergence(stockName, timeInterval);
 
       const fetchStockFn = () => {
-        console.log(index.toString());
+        // console.log(index.toString());
+        // console.log(errorIndex.toString());
         if (index === this.stockArray.length) {
           return;
         }
 
         const stockName = this.stockArray[index++];
 
-        fetchPromise(stockName).then((quoteArray) => {
-          //
-          console.log(stockName);
-          if (quoteArray.length > this.lastCheckInterval) {
-            for (
-              let checkIndex = quoteArray.length - this.lastCheckInterval;
-              checkIndex < quoteArray.length - 1;
-              checkIndex++
-            ) {
-              const crrStockData: StockData = quoteArray[checkIndex];
-              if (crrStockData.lowerStockData) {
-                if (timeInterval === '1h') {
-                  this.hourDivergenceMap.set(stockName, crrStockData);
-                } else {
-                  this.dayDivergenceMap.set(stockName, crrStockData);
+        fetchPromise(stockName)
+          .then((quoteArray) => {
+            //
+            // console.log(stockName);
+            if (quoteArray.length > this.lastCheckInterval) {
+              for (
+                let checkIndex = quoteArray.length - this.lastCheckInterval;
+                checkIndex < quoteArray.length - 1;
+                checkIndex++
+              ) {
+                const crrStockData: StockData = quoteArray[checkIndex];
+                if (crrStockData.lowerStockData) {
+                  if (timeInterval === '1h') {
+                    this.hourDivergenceMap.set(stockName, crrStockData);
+                  } else {
+                    this.dayDivergenceMap.set(stockName, crrStockData);
+                  }
                 }
               }
             }
-          }
-          //
-          fetched.push(quoteArray);
-          console.log(fetched.length, this.stockArray.length);
-          if (fetched.length === this.stockArray.length) {
-            console.log('****************************');
-            // this.divergenceMap = fetched;
-            resolve('');
-          } else {
-            fetchStockFn();
-          }
-        });
+            //
+            fetched.push(quoteArray);
+            // console.log(fetched.length, this.stockArray.length, errorIndex);
+            if (fetched.length === this.stockArray.length - errorIndex) {
+              console.log('****************************');
+              // this.divergenceMap = fetched;
+              resolve('');
+            } else {
+              fetchStockFn();
+            }
+          })
+          .catch(() => {
+            console.error('Error Cathed');
+            errorIndex++;
+          });
       };
 
       times(50, fetchStockFn);

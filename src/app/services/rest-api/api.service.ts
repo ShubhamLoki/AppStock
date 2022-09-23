@@ -32,7 +32,7 @@ export class ApiService {
     if (timeInterval != null) {
       this.timeInterval = timeInterval;
     }
-    console.log(this.timeInterval);
+    // console.log(this.timeInterval);
     return this.httpClient.get(
       `${this.baseUrl}/${stockName}.NS?formatted=true&crumb=w9FEupPhpmK&lang=en-IN&region=IN&interval=${this.timeInterval}&period1=${this.from}&period2=${this.to}&events=div%7Csplit&corsDomain=in.finance.yahoo.com`
     );

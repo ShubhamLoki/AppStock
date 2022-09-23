@@ -1,16 +1,23 @@
+import { OptionAnalysisComponent } from './option-analysis/option-analysis.component';
 import { Title } from '@angular/platform-browser';
-import { CommonService } from './../../services/common.service';
-import { environment } from './../../../environments/environment';
-import { OptionChainService } from './../../services/option-chain.service';
-import { ApiService } from '../../services/rest-api/api.service';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { OptionChainService } from 'src/app/services';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  ViewChildren,
+  QueryList,
+  AfterViewInit,
+} from '@angular/core';
 
 @Component({
   selector: 'app-option-chain-home',
   templateUrl: './option-chain-home.component.html',
   styleUrls: ['./option-chain-home.component.scss'],
 })
-export class OptionChainHomeComponent implements OnInit, OnDestroy {
+export class OptionChainHomeComponent
+  implements OnInit, OnDestroy, AfterViewInit {
   @Input() symbol;
   // ----------- Chart Data
   chartPDReady = false;
@@ -19,6 +26,9 @@ export class OptionChainHomeComponent implements OnInit, OnDestroy {
   showOptionDetails = false;
   showOptionPD = false;
   showCOR = false;
+
+  @ViewChildren(OptionAnalysisComponent)
+  listAll: QueryList<OptionAnalysisComponent>;
 
   OCC = 'Compare';
   OCA = 'Analysis';
@@ -52,7 +62,9 @@ export class OptionChainHomeComponent implements OnInit, OnDestroy {
       }
     }, 3 * 60 * 1000);
   }
-
+  ngAfterViewInit() {
+    this.listAll.forEach((alertInstance) => console.log(alertInstance));
+  }
   ngOnDestroy() {
     clearInterval(this.timeInterval);
     clearInterval(this.activeTimeInterval);
