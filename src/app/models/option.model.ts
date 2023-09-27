@@ -6,6 +6,7 @@ export class Option {
   identifier;
   openInterest;
   changeinOpenInterest;
+  lastChangeinOpenInterest;
   pchangeinOpenInterest;
   totalTradedVolume;
   impliedVolatility;

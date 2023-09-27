@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   expiryDate: `04-02-2021`,
   backEndBaseUrl: 'http://localhost:9090',
+  version: 3.1,
 };
 
 /*

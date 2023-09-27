@@ -1,3 +1,4 @@
+import { environment } from './../../../environments/environment.prod';
 import { NIFTY, BANKNIFTY } from './../../constants/common.constants';
 import { CommonService } from './../../services/common.service';
 import { ApiService } from 'src/app/services/rest-api/api.service';
@@ -28,7 +29,8 @@ export class AppHomeComponent
     AfterContentChecked,
     AfterViewInit,
     AfterViewChecked,
-    OnDestroy {
+    OnDestroy
+{
   HAH = 'HAH';
   DH = 'DH';
   PBH = 'PBH';
@@ -39,7 +41,7 @@ export class AppHomeComponent
   BANKNIFTY = BANKNIFTY;
   activeModule = this.NOCH; // Option Chain Tab
   public name = 'Shubham';
-  version = '2.9';
+  version = environment.version;
   constructor(private titleService: Title) {}
 
   // LIFT CYCLE HOOKS

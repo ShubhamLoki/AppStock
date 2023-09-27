@@ -34,6 +34,16 @@ export class StockApiService {
     const url = `${ApiService.BE_BASE_URL}/${StockApiService.SUB_PATH}/option-chain/${symbol}?strikePrice=${strikePrice}&option=${option}`;
     return this.apiService.getMethod(url);
   }
+
+  // "/option-chain/max-oi/{symbol}"
+  /**
+   * getOptionChainData
+   */
+  public getMaxOptionChainData(symbol): Observable<any> {
+    const url = `${ApiService.BE_BASE_URL}/${StockApiService.SUB_PATH}/option-chain/max-oi/${symbol}`;
+    return this.apiService.getMethod(url);
+  }
+
   // "/option-chain-both/{symbol}"
   /**
    * getOptionChainData

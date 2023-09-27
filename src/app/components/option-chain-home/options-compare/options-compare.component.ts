@@ -124,6 +124,7 @@ export class OptionsCompareComponent implements OnInit, OnDestroy {
 
   private loadStrikePrices(): void {
     this.optionChainService.getStrikePrice(this.symbol).then((data) => {
+      console.log(data);
       data.forEach((strike) => {
         this.strikes.push({
           value: strike.strikePrice,
@@ -131,6 +132,14 @@ export class OptionsCompareComponent implements OnInit, OnDestroy {
         });
       });
     });
+    let first = 14000;
+    for (let index = 0; index < 200; index++) {
+      this.strikes.push({
+        value: first,
+        viewValue: first,
+      });
+      first += 50;
+    }
   }
 
   public dropDownChangedCE(e: any): void {

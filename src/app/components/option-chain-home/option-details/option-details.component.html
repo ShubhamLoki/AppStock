@@ -31,10 +31,11 @@
         <tr>
           <td>LTP</td>
           <td>OI</td>
-          <!-- <td>COIVR</td> -->
+          <td>PCOI</td>
           <td>COI</td>
           <td>Strike Price</td>
           <td>COI</td>
+          <td>PCOI</td>
           <td>OI</td>
           <td>LTP</td>
         </tr>
@@ -85,7 +86,17 @@
               </a>
             </span>
           </td>
-
+          <td [ngClass]="{ 'bg-light': optionObj.key < underlyingValue }">
+            <!-- CE PCOI -->
+            <span class="text-danger" *ngIf="optionObj.value.CE">
+              <a
+                (click)="openChart(optionObj, OPT_STR.COI)"
+                class="mr-1 pointer"
+              >
+                {{ optionObj.value.CE.lastChangeinOpenInterest }}
+              </a>
+            </span>
+          </td>
           <td [ngClass]="{ 'bg-light': optionObj.key < underlyingValue }">
             <!-- CE COI -->
             <span
@@ -103,13 +114,30 @@
                 {{
                   optionObj.value.CE.changeinOpenInterest * multiply | number
                 }}
+                <span
+                  class="ml-1"
+                  [ngClass]="
+                    getLtpClass(optionObj.value.CE.pchangeinOpenInterest)
+                  "
+                  >({{
+                    optionObj.value.CE.pchangeinOpenInterest | number: "1.2-2"
+                  }}
+                  %)</span
+                >
               </a>
             </span>
           </td>
 
           <td [ngClass]="{ 'text-primary': getMaxPPIndex(optionObj.key) > -1 }">
             <!-- CE ST PE -->
-            <span class="font-weight-bold mr-1"
+            <i
+              *ngIf="
+                optionObj.value.PE.changeinOpenInterest <
+                optionObj.value.CE.changeinOpenInterest
+              "
+              class="fa fa-arrow-left mr-1"
+            ></i>
+            <span class="font-weight-bold"
               ><a (click)="openChart(optionObj, OPT_STR.COI)" class="pointer">{{
                 optionObj.key | number
               }}</a></span
@@ -120,10 +148,17 @@
             >
               <i class="fa fa-book"></i>
             </button> -->
+            <i
+              *ngIf="
+                optionObj.value.PE.changeinOpenInterest >
+                optionObj.value.CE.changeinOpenInterest
+              "
+              class="fa fa-arrow-right ml-1"
+            ></i>
           </td>
 
+          <!-- PE COI -->
           <td [ngClass]="{ 'bg-light': optionObj.key > underlyingValue }">
-            <!-- PE COI -->
             <span
               *ngIf="optionObj.value.PE"
               [ngClass]="
@@ -137,13 +172,38 @@
                 class="mr-1 pointer"
                 >{{
                   optionObj.value.PE.changeinOpenInterest * multiply | number
-                }}</a
-              >
+                }}
+                <span
+                  class="ml-1"
+                  [ngClass]="
+                    getLtpClass(optionObj.value.PE.pchangeinOpenInterest)
+                  "
+                  >({{
+                    optionObj.value.PE.pchangeinOpenInterest | number: "1.2-2"
+                  }}
+                  %)</span
+                >
+              </a>
             </span>
           </td>
-
+          <!-- CE PCOI -->
           <td [ngClass]="{ 'bg-light': optionObj.key > underlyingValue }">
-            <!-- PE OI -->
+            <span
+              [ngClass]="
+                getLtpClass(optionObj.value.PE.lastChangeinOpenInterest)
+              "
+              *ngIf="optionObj.value.PE"
+            >
+              <a
+                (click)="openChart(optionObj, OPT_STR.COI)"
+                class="mr-1 pointer"
+              >
+                {{ optionObj.value.PE.lastChangeinOpenInterest }}
+              </a>
+            </span>
+          </td>
+          <!-- PE OI -->
+          <td [ngClass]="{ 'bg-light': optionObj.key > underlyingValue }">
             <span
               *ngIf="optionObj.value.PE"
               [ngClass]="
@@ -157,8 +217,8 @@
               >
             </span>
           </td>
+          <!-- PE LTP -->
           <td [ngClass]="{ 'bg-light': optionObj.key > underlyingValue }">
-            <!-- PE LTP -->
             <span *ngIf="optionObj.value.PE"
               ><a
                 (click)="

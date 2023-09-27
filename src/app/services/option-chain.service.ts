@@ -25,7 +25,7 @@ export class OptionChainService {
         .getOptionChainDataBoth(symbole, strikePrice)
         .subscribe((data: Option[]) => {
           console.log(data);
-          const multiply = symbole === NIFTY ? 75 : 25;
+          const multiply = symbole === NIFTY ? 50 : 25;
           if (data) {
             data.sort((a, b) =>
               a.creationDateTime > b.creationDateTime ? 1 : -1
@@ -72,7 +72,7 @@ export class OptionChainService {
         .getOptionChainDataBoth(symbole, strikePrice)
         .subscribe((data: Option[]) => {
           console.log(data);
-          const multiply = symbole === NIFTY ? 75 : 25;
+          const multiply = symbole === NIFTY ? 50 : 25;
           if (data) {
             data.sort((a, b) =>
               a.creationDateTime > b.creationDateTime ? 1 : -1
@@ -140,7 +140,7 @@ export class OptionChainService {
           const timeArr = [];
           const coiVolumeRationArr = [];
           const ltpArr = [];
-          const multiply = symbole === NIFTY ? 75 : 25;
+          const multiply = symbole === NIFTY ? 50 : 25;
           if (data) {
             data.sort((a, b) =>
               a.creationDateTime > b.creationDateTime ? 1 : -1
@@ -284,5 +284,19 @@ export class OptionChainService {
       // console.log(option.lastPrice);
       permiumMap.set(timestamp, option.lastPrice - lastPremium);
     }
+  }
+
+  public getMaxOptionChainData(symbol): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.stockApiService
+        .getMaxOptionChainData(symbol)
+        .subscribe((data: any[]) => {
+          if (data) {
+            resolve(data);
+          } else {
+            reject();
+          }
+        });
+    });
   }
 }

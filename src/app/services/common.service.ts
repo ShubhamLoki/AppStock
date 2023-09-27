@@ -121,4 +121,24 @@ export class CommonService {
     console.log(expDate);
     return expDate;
   }
+
+  public setOptionInSession(value) {
+    sessionStorage.setItem('optionListNifty', JSON.stringify(value));
+  }
+
+  public getOptionFromSession() {
+    const optionMap = sessionStorage.getItem('optionListNifty');
+    let arr = [];
+    console.log(optionMap);
+    if (optionMap) arr = Object.entries(optionMap);
+    return new Map<string, any>(arr);
+  }
 }
+
+// SELECT topt.strike_price as strike_price,
+// topt.option_str as option_str,
+// max(topt.changein_open_interest) as changein_open_interest
+// FROM tbl_option topt where
+// topt.creation_date_time >= (select DATE_FORMAT(max(tofin.creation_date_time), '%Y-%m-%d') from tbl_option_feed tofin)
+// AND topt.underlying = ?1
+// GROUP BY topt.strike_price, topt.option_str ;
